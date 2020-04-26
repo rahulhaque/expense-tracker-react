@@ -49,7 +49,7 @@ const Login = (props) => {
 
           setState((prev) => ({ ...prev, user: response.data.user }));
 
-          // props.location.state === undefined ? props.history.replace('/dashboard') : props.history.replace(props.location.state.from.pathname);
+          props.location.state === undefined ? props.history.replace('/dashboard') : props.history.replace(props.location.state.from.pathname);
         }
 
       })
@@ -65,7 +65,7 @@ const Login = (props) => {
         }
 
       })
-  }, [handleSubmit]);
+  });
 
   return (
     <div>

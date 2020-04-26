@@ -15,8 +15,9 @@ import 'primeflex/primeflex.css';
 // import './fc-daygrid.css';
 // import '@fullcalendar/timegrid/main.css';
 // import '@fullcalendar/list/main.css';
-import './extra/layout.css';
-import './App.css';
+import './extra/layout.css'; // Sigma theme from primereact
+import './extra/blueberry-orange.css'; // Custom theme made by me
+import './App.css'; // Is for testing CSS
 
 const app_name = process.env.REACT_APP_APP_NAME;
 
