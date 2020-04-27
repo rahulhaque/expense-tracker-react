@@ -4,26 +4,26 @@ import classNames from 'classnames';
 import { ScrollPanel } from "primereact/components/scrollpanel/ScrollPanel";
 import AppTopbar from './../dashboard/AppTopbar';
 import AppInlineProfile from "./../dashboard/AppInlineProfile";
-import { AppMenu } from "./../dashboard/AppMenu";
+import AppMenu from "./../dashboard/AppMenu";
 import AppFooter from './../dashboard/AppFooter';
 import { logout } from './../../Axios';
 import { Route, Switch } from "react-router-dom";
 import { PrivateRoute } from "./../../Routes";
 import { useTracked } from '../../Store';
 
-// import Dashboard from "../app/dashboard/Dashboard";
+// import Dashboard from './../dashboard/Dashboard';
 // import ExpenseCategory from "../app/expense/ExpenseCategory";
 // import Setting from "../app/setting/Setting";
 // import Expense from "../app/expense/Expense";
 // import EditExpense from "../app/expense/EditExpense";
 // import Income from "../app/income/Income";
 // import EditIncome from "../app/income/EditIncome";
-// import Profile from "../app/profile/Profile";
+import Profile from './../profile/Profile';
 // import EditProfile from "../app/profile/EditProfile";
 // import EditExpenseCategory from "../app/expense/EditExpenseCategory";
 // import IncomeCategory from "../app/income/IncomeCategory";
 // import EditIncomeCategory from "../app/income/EditIncomeCategory";
-// import TransactionCalendar from "../app/calendar/TransactionCalendar";
+import TransactionCalendar from './../calendar/TransactionCalendar';
 // import PageNotFound from "../app/error/404";
 
 const isDesktop = () => {
@@ -75,6 +75,11 @@ const DashboardLayout = (props) => {
     }
   }
 
+  /**
+   * If menu item has no child, this function will
+   * close the menu on item click. Else it will
+   * open the child drawer.
+   */
   const onMenuItemClick = (event) => {
     if (!event.item.items) {
       setOverlayMenuActive(false);
@@ -109,6 +114,8 @@ const DashboardLayout = (props) => {
       </div>
       <div className="layout-main" style={{ minHeight: '95vh' }}>
         <Switch>
+          <PrivateRoute exact strict path={'/profile'} component={Profile} />
+          <PrivateRoute exact strict path={'/calendar'} component={TransactionCalendar} />
           {/* <PrivateRoute exact strict path={'/dashboard'} component={Dashboard} />
             <PrivateRoute exact strict path={'/expense'} component={Expense} />
             <PrivateRoute exact strict path={'/expense/:expense_id/edit'} component={EditExpense} />
@@ -118,9 +125,7 @@ const DashboardLayout = (props) => {
             <PrivateRoute exact strict path={'/expense/category/:category_id/edit'} component={EditExpenseCategory} />
             <PrivateRoute exact strict path={'/income/category'} component={IncomeCategory} />
             <PrivateRoute exact strict path={'/income/category/:category_id/edit'} component={EditIncomeCategory} />
-            <PrivateRoute exact strict path={'/calendar'} component={TransactionCalendar} />
             <PrivateRoute exact strict path={'/setting'} component={Setting} />
-            <PrivateRoute exact strict path={'/profile'} component={Profile} />
             <PrivateRoute exact strict path={'/profile/edit'} component={EditProfile} />
             <Route render={props => <PageNotFound {...props} />} /> */}
         </Switch>

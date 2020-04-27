@@ -5,16 +5,16 @@ import { Provider } from './Store';
 import Routes from './Routes';
 
 import 'primereact/resources/primereact.min.css';
-import 'primereact/resources/themes/nova-light/theme.css';
 import 'primeicons/primeicons.css';
+// import 'primereact/resources/themes/nova-light/theme.css';
+import './extra/nova-light.css';
 import 'primeflex/primeflex.css';
-// import './extra/nova-light.css';
-// import '@fullcalendar/core/main.css';
+import '@fullcalendar/core/main.css';
 // import './fc-core.css';
-// import '@fullcalendar/daygrid/main.css';
+import '@fullcalendar/daygrid/main.css';
 // import './fc-daygrid.css';
-// import '@fullcalendar/timegrid/main.css';
-// import '@fullcalendar/list/main.css';
+import '@fullcalendar/timegrid/main.css';
+import '@fullcalendar/list/main.css';
 import './extra/layout.css'; // Sigma theme from primereact
 import './extra/blueberry-orange.css'; // Custom theme made by me
 import './App.css'; // Is for testing CSS

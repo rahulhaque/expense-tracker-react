@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react'
+import React, { useState } from 'react'
 import { useForm } from 'react-hook-form';
 import * as yup from 'yup';
 
@@ -21,9 +21,11 @@ const registerValidationSchema = yup.object().shape({
   confirm_password: yup.string().required('Password confirm field is required').oneOf([yup.ref('password')], 'Confirm password does not match')
 });
 
-let messages = [];  // For alert message
+let messages;  // For alert message
 
 const Register = (props) => {
+
+  const [submitting, setSubmitting] = useState(false);
 
   console.log('Register', props);
 
@@ -32,7 +34,8 @@ const Register = (props) => {
     validationSchema: registerValidationSchema
   });
 
-  const submitRegister = useCallback((data) => {
+  const submitRegister = (data) => {
+    setSubmitting(true);
     axios.post(authApiEndpoints.register, JSON.stringify(data))
       .then(response => {
         console.log('response', response.data);
@@ -41,6 +44,7 @@ const Register = (props) => {
           messages.clear();
           messages.show({ severity: 'success', detail: 'Registration successful. Go to login.', sticky: true });
           reset();
+          setSubmitting(false);
         }
 
       })
@@ -58,8 +62,10 @@ const Register = (props) => {
           messages.show({ severity: 'error', detail: 'Something went wrong. Try again.', sticky: true });
         }
 
+        setSubmitting(false);
+
       })
-  });
+  };
 
   return (
     <div>
@@ -106,7 +112,7 @@ const Register = (props) => {
               <p className="text-error">{errors.confirm_password?.message}</p>
             </div>
             <div className="p-col-12 p-fluid">
-              <Button type="submit" label={'Register'} icon="pi pi-sign-in" className="p-button-raised" />
+              <Button disabled={submitting} type="submit" label={'Register'} icon="pi pi-sign-in" className="p-button-raised" />
             </div>
             <div className="p-grid p-nogutter p-col-12 p-justify-center">
               <Link to="/login">Login</Link>

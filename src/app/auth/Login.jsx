@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react';
+import React, { useState } from 'react';
 import * as yup from 'yup';
 import { useForm } from 'react-hook-form';
 import { Helmet } from 'react-helmet';
@@ -20,11 +20,12 @@ const loginValidationSchema = yup.object().shape({
   password: yup.string().required('This field is required.').min(6, 'Must be 6 characters.'),
 });
 
-let messages = []; // For alert message
+let messages; // For alert message
 
 const Login = (props) => {
 
   const [state, setState] = useTracked();
+  const [submitting, setSubmitting] = useState(false);
 
   console.log('Login', state);
 
@@ -33,9 +34,9 @@ const Login = (props) => {
     validationSchema: loginValidationSchema
   });
 
-  const submitLogin = useCallback((data) => {
+  const submitLogin = (data) => {
     messages.clear(); // Clear existing messages
-
+    setSubmitting(true);
     axios.post(authApiEndpoints.login, JSON.stringify(data))
       .then(response => {
         // console.log('success');
@@ -63,9 +64,9 @@ const Login = (props) => {
         else {
           messages.show({ severity: 'error', detail: 'Something went wrong. Try again.', sticky: true });
         }
-
+        setSubmitting(false);
       })
-  });
+  };
 
   return (
     <div>
@@ -96,7 +97,7 @@ const Login = (props) => {
               <p className="text-error">{errors.password?.message}</p>
             </div>
             <div className="p-col-12 p-fluid">
-              <Button type="submit" label={'Sign In'} icon="pi pi-sign-in" className="p-button-raised" />
+              <Button disabled={submitting} type="submit" label={'Sign In'} icon="pi pi-sign-in" className="p-button-raised" />
             </div>
             <div className="p-grid p-nogutter p-col-12 p-justify-center">
               <Link to="/register">Register</Link>
