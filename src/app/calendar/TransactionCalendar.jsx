@@ -52,7 +52,7 @@ const TransactionCalendar = (props) => {
   const [events, setEvents] = useState([]);
 
   useEffect(() => {
-    if (events.length == 0) {
+    if (events.length === 0) {
       requestTransaction();
     }
   });

@@ -17,11 +17,11 @@ const LocaleToggle = (props) => {
     setState(prev => {
       if (prev.language === 'bn') {
         i18n.changeLanguage('en');
-        return { language: 'en' };
+        return {...prev, language: 'en' };
       }
       else {
         i18n.changeLanguage('bn');
-        return { language: 'bn' }
+        return {...prev, language: 'bn' }
       }
     });
   }, [state.language]);

@@ -12,7 +12,6 @@ import axios from './../../Axios';
 const CurrencySidebar = (props) => {
 
   const [state, setState] = useTracked();
-
   const [currencies, setCurrencies] = useState([]);
   const [fetching, setFetching] = useState(true);
 
@@ -20,7 +19,7 @@ const CurrencySidebar = (props) => {
     if (currencies.length == 0) {
       requestCurrencies();
     }
-  });
+  }, [currencies.length == 0]);
 
   const requestCurrencies = useCallback(() => {
     axios.get(currencyApiEndpoints.currency, {})
@@ -29,7 +28,7 @@ const CurrencySidebar = (props) => {
         if (response.data.data.length > 0) {
           let currency = response.data.data.find(el => el.id === getItem('user').currency_id ? el : null)
 
-          setState(prev => ({ ...prev, currentCurrency: currency }));
+          setState(prev => ({ ...prev, currentCurrency: currency, currencyLoading: false }));
           setCurrencies(response.data.data);
           setFetching(false);
         }
@@ -37,7 +36,7 @@ const CurrencySidebar = (props) => {
       .catch(error => {
         console.log(error);
       });
-  }, [currencies]);
+  }, [currencies.length == 0]);
 
   return (
     <Sidebar visible={props.visible} position="right" onHide={props.onHide} style={{ width: '345px' }}>
@@ -72,4 +71,4 @@ const CurrencySidebar = (props) => {
   );
 }
 
-export default CurrencySidebar;
+export default React.memo(CurrencySidebar);
