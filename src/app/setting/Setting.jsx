@@ -22,17 +22,9 @@ const Setting = (props) => {
   const [t, i18n] = useTranslation();
 
   const toggleLanguage = useCallback(() => {
-    setState(prev => {
-      if (prev.language === 'bn') {
-        i18n.changeLanguage('en');
-        return {...prev, language: 'en' };
-      }
-      else {
-        i18n.changeLanguage('bn');
-        return {...prev, language: 'bn' }
-      }
-    });
-  }, [state.language]);
+    i18n.language === 'en' ? i18n.changeLanguage('bn') : i18n.changeLanguage('en');
+    setItem('language', i18n.language);
+  }, []);
 
   const submitSetting = () => {
     axios.put(currencyApiEndpoints.currency + '/' + getItem('user').id, JSON.stringify({ currency_id: state.currentCurrency.id }))
@@ -169,7 +161,7 @@ const Setting = (props) => {
                 Language:
                 </h3>
               <h3 className="color-highlight p-col-4">
-                {state.language === 'en' ? 'English' : 'বাংলা'}
+                {i18n.language === 'en' ? 'English' : 'বাংলা'}
               </h3>
               <h3>
                 <Button label="Toggle" icon="pi pi-refresh"

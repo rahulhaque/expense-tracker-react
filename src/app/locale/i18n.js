@@ -13,7 +13,7 @@ i18n
       en: en,
       bn: bn
     },
-    lng: getItem('state') ? getItem('state').language : 'en',
+    lng: getItem('language') ? getItem('language') : 'en',
     keySeparator: false, // we do not use keys in form messages.welcome
     interpolation: {
       escapeValue: false // react already safes from xss

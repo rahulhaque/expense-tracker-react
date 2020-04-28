@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 
 import { Button } from 'primereact/button';
 
+import { setItem } from './../../Helpers';
 import { useTracked } from './../../Store';
 
 const LocaleToggle = (props) => {
@@ -14,21 +15,13 @@ const LocaleToggle = (props) => {
   console.log('LocaleToggle', state);
 
   const toggleLanguage = useCallback(() => {
-    setState(prev => {
-      if (prev.language === 'bn') {
-        i18n.changeLanguage('en');
-        return {...prev, language: 'en' };
-      }
-      else {
-        i18n.changeLanguage('bn');
-        return {...prev, language: 'bn' }
-      }
-    });
-  }, [state.language]);
+    i18n.language === 'en' ? i18n.changeLanguage('bn') : i18n.changeLanguage('en')
+    setItem('language', i18n.language);
+  });
 
   return (
     <Button type="button" onClick={toggleLanguage}
-      label={state.language === 'en' ? 'English' : 'বাংলা'} icon="pi pi-globe"
+      label={i18n.language === 'en' ? 'English' : 'বাংলা'} icon="pi pi-globe"
       className={props.className ? props.className : "p-button-raised p-button-rounded p-button-secondary"}
       style={{ width: '100px' }} />
   );
