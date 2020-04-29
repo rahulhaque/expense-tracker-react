@@ -13,8 +13,6 @@ import interactionPlugin from '@fullcalendar/interaction';
 import { reportApiEndpoints } from './../../API';
 import axios from './../../Axios';
 
-
-
 let messages;
 
 const options = {
@@ -51,6 +49,8 @@ const TransactionCalendar = (props) => {
   const [fetching, setFetching] = useState(true);
   const [events, setEvents] = useState([]);
 
+  console.log(events);
+
   useEffect(() => {
     if (events.length === 0) {
       requestTransaction();
@@ -62,8 +62,8 @@ const TransactionCalendar = (props) => {
       .then(response => {
         // console.log(response.data);
         if (response.data.transactions.length > 0) {
-          setEvents({
-            events: response.data.transactions.map(item => {
+          setEvents(
+            response.data.transactions.map(item => {
               return item.transaction_type === 'Income' ? {
                 id: item.formatted_date,
                 title: `(+) ${item.total} ${item.currency_name}`,
@@ -79,7 +79,7 @@ const TransactionCalendar = (props) => {
                   borderColor: '#f45b36'
                 }
             })
-          });
+          );
           setFetching(false);
         } else {
 

@@ -18,7 +18,7 @@ import { useTracked } from '../../Store';
 // import Income from "../app/income/Income";
 // import EditIncome from "../app/income/EditIncome";
 import Profile from './../profile/Profile';
-// import EditProfile from "../app/profile/EditProfile";
+import EditProfile from './../profile/EditProfile';
 // import EditExpenseCategory from "../app/expense/EditExpenseCategory";
 // import IncomeCategory from "../app/income/IncomeCategory";
 // import EditIncomeCategory from "../app/income/EditIncomeCategory";
@@ -117,6 +117,7 @@ const DashboardLayout = (props) => {
           <PrivateRoute exact strict path={'/profile'} component={Profile} />
           <PrivateRoute exact strict path={'/calendar'} component={TransactionCalendar} />
           <PrivateRoute exact strict path={'/setting'} component={Setting} />
+          <PrivateRoute exact strict path={'/profile/edit'} component={EditProfile} />
           {/* <PrivateRoute exact strict path={'/dashboard'} component={Dashboard} />
             <PrivateRoute exact strict path={'/expense'} component={Expense} />
             <PrivateRoute exact strict path={'/expense/:expense_id/edit'} component={EditExpense} />
@@ -126,7 +127,6 @@ const DashboardLayout = (props) => {
             <PrivateRoute exact strict path={'/expense/category/:category_id/edit'} component={EditExpenseCategory} />
             <PrivateRoute exact strict path={'/income/category'} component={IncomeCategory} />
             <PrivateRoute exact strict path={'/income/category/:category_id/edit'} component={EditIncomeCategory} />
-            <PrivateRoute exact strict path={'/profile/edit'} component={EditProfile} />
             <Route render={props => <PageNotFound {...props} />} /> */}
         </Switch>
       </div>

@@ -1,5 +1,6 @@
 export default {
   translation: {
+    lng: 'English',
     name: 'Name',
     email: 'Email',
     mobile: 'Mobile',

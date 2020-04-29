@@ -7,8 +7,8 @@ const globalState = {
   // Declare your global variable and functions here
   layoutMode: getItem('layoutMode') ? getItem('layoutMode') : 'static',
   layoutColorMode: getItem('layoutColorMode') ? getItem('layoutColorMode') : 'dark',
+  currencies: [],
   currentCurrency: null,
-  currencyLoading: true,
   user: getItem('user') ? getItem('user') : ''
 };
 

@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useEffect } from 'react';
+import React, { useCallback, useEffect } from 'react';
 
 import { Sidebar } from 'primereact/sidebar';
 import { ListBox } from 'primereact/listbox';
@@ -12,48 +12,44 @@ import axios from './../../Axios';
 const CurrencySidebar = (props) => {
 
   const [state, setState] = useTracked();
-  const [currencies, setCurrencies] = useState([]);
-  const [fetching, setFetching] = useState(true);
 
   useEffect(() => {
-    if (currencies.length == 0) {
-      requestCurrencies();
-    }
-  }, [currencies.length == 0]);
+    requestCurrencies();
+  }, [state.currencies.length]);
 
   const requestCurrencies = useCallback(() => {
-    axios.get(currencyApiEndpoints.currency, {})
-      .then(response => {
-        // console.log(response.data);
-        if (response.data.data.length > 0) {
-          let currency = response.data.data.find(el => el.id === getItem('user').currency_id ? el : null)
+    if (state.currencies.length === 0) {
+      axios.get(currencyApiEndpoints.currency, {})
+        .then(response => {
+          // console.log(response.data);
+          if (response.data.data.length > 0) {
+            let currency = response.data.data.find(el => el.id === getItem('user').currency_id ? el : null)
 
-          setState(prev => ({ ...prev, currentCurrency: currency, currencyLoading: false }));
-          setCurrencies(response.data.data);
-          setFetching(false);
-        }
-      })
-      .catch(error => {
-        console.log(error);
-      });
-  }, [currencies.length == 0]);
+            setState(prev => ({ ...prev, currencies: response.data.data, currentCurrency: currency }));
+          }
+        })
+        .catch(error => {
+          console.log(error);
+        });
+    }
+  }, [state.currencies.length]);
 
   return (
     <Sidebar visible={props.visible} position="right" onHide={props.onHide} style={{ width: '345px' }}>
       <h1 className="p-card-title">Currencies</h1>
       {
-        fetching ?
+        state.currencies.length === 0 ?
           <div className="p-grid p-justify-center p-align-center" style={{ height: '86vh' }}>
             <ProgressSpinner style={{ height: '35px' }} strokeWidth={'4'} />
           </div>
           :
           <ListBox value={state.currentCurrency}
             filter={true}
-            options={currencies}
+            options={state.currencies}
             dataKey="currency_code"
             optionLabel="currency_code"
             onChange={(e) => {
-              console.log(e.value);
+              // console.log(e.value);
               setState(prev => ({ ...prev, currentCurrency: e.value }));
             }}
             itemTemplate={(item) => {

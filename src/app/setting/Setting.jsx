@@ -33,7 +33,7 @@ const Setting = (props) => {
 
         if (response.status === 200) {
 
-          setItem('user', { ...getItem('user'), currency_id: response.data.request.currency_id, currency: state.currentCurrency });
+          setItem('user', { ...getItem('user'), currency_id: response.data.request.currency_id });
 
           messages.show({
             severity: 'success',
@@ -102,7 +102,7 @@ const Setting = (props) => {
                 Current Currency:
                 </h3>
               <h3 className="color-highlight p-col-4">
-                {state.currencyLoading ? 'loading' : state.currentCurrency.currency_code + ' (' + state.currentCurrency.currency_name + ')'}
+                {state.currencies.length === 0 ? 'loading' : state.currentCurrency.currency_code + ' (' + state.currentCurrency.currency_name + ')'}
               </h3>
               <h3>
                 <Button label="Change" icon="pi pi-refresh"

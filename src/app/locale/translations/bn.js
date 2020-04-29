@@ -1,5 +1,6 @@
 export default {
   translation: {
+    lng: 'বাংলা',
     name: 'নাম',
     email: 'ইমেইল',
     mobile: 'ফোন',
