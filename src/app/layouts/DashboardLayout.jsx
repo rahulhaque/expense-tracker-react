@@ -24,7 +24,7 @@ import EditProfile from './../profile/EditProfile';
 // import EditIncomeCategory from "../app/income/EditIncomeCategory";
 import TransactionCalendar from './../calendar/TransactionCalendar';
 import Setting from './../setting/Setting';
-// import PageNotFound from "../app/error/404";
+import PageNotFound from './../errors/404';
 
 const isDesktop = () => {
   return window.innerWidth > 1024;
@@ -118,6 +118,7 @@ const DashboardLayout = (props) => {
           <PrivateRoute exact strict path={'/calendar'} component={TransactionCalendar} />
           <PrivateRoute exact strict path={'/setting'} component={Setting} />
           <PrivateRoute exact strict path={'/profile/edit'} component={EditProfile} />
+          <Route render={props => <PageNotFound {...props} />} />
           {/* <PrivateRoute exact strict path={'/dashboard'} component={Dashboard} />
             <PrivateRoute exact strict path={'/expense'} component={Expense} />
             <PrivateRoute exact strict path={'/expense/:expense_id/edit'} component={EditExpense} />
@@ -127,7 +128,7 @@ const DashboardLayout = (props) => {
             <PrivateRoute exact strict path={'/expense/category/:category_id/edit'} component={EditExpenseCategory} />
             <PrivateRoute exact strict path={'/income/category'} component={IncomeCategory} />
             <PrivateRoute exact strict path={'/income/category/:category_id/edit'} component={EditIncomeCategory} />
-            <Route render={props => <PageNotFound {...props} />} /> */}
+            */}
         </Switch>
       </div>
       <AppFooter />
