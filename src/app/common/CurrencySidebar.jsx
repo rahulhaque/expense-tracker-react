@@ -5,7 +5,6 @@ import { ListBox } from 'primereact/listbox';
 import { ProgressSpinner } from 'primereact/progressspinner';
 
 import { useTracked } from './../../Store';
-import { getItem } from './../../Helpers';
 import { currencyApiEndpoints } from './../../API';
 import axios from './../../Axios';
 
@@ -23,7 +22,7 @@ const CurrencySidebar = (props) => {
         .then(response => {
           // console.log(response.data);
           if (response.data.data.length > 0) {
-            let currency = response.data.data.find(el => el.id === state.user.currency_id ? el : null)
+            let currency = response.data.data.find(el => el.id === state.user.currency_id ? el : null);
 
             setState(prev => ({ ...prev, currencies: response.data.data, currentCurrency: currency }));
           }
@@ -43,7 +42,8 @@ const CurrencySidebar = (props) => {
             <ProgressSpinner style={{ height: '35px' }} strokeWidth={'4'} />
           </div>
           :
-          <ListBox value={state.currentCurrency}
+          <ListBox
+            value={state.currentCurrency}
             filter={true}
             options={state.currencies}
             dataKey="currency_code"

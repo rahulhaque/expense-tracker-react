@@ -1,22 +1,21 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import { Helmet } from 'react-helmet';
-import { useForm } from 'react-hook-form';
-import * as yup from "yup";
+import { useForm, Controller } from 'react-hook-form';
+import * as yup from 'yup';
 
 import { Messages } from 'primereact/messages';
 import { Card } from 'primereact/card';
 import { Button } from 'primereact/button';
-import { Dropdown } from "primereact/dropdown";
+import { Dropdown } from 'primereact/dropdown';
 
 import { userApiEndpoints, currencyApiEndpoints } from './../../API';
 import axios from './../../Axios';
-import { setItem } from './../../Helpers';
 import { useTracked } from './../../Store';
 
 const updateProfileValidationSchema = yup.object().shape({
   name: yup.string().required('Name field is required').min(4, 'Name must be at most 4 character'),
   email: yup.string().required('Email field is required').min(6, 'Email must be at most 6 character'),
-  // currency_id: yup.number().required('Currency field is required'),
+  currency: yup.object().required('Currency field is required'),
 });
 
 let messages; // For alert message
@@ -24,7 +23,7 @@ let messages; // For alert message
 const EditProfile = (props) => {
 
   const [state, setState] = useTracked();
-  const { register, handleSubmit, errors, setValue, setError } = useForm({
+  const { register, handleSubmit, errors, setValue, setError, control } = useForm({
     validationSchema: updateProfileValidationSchema
   });
   const [submitting, setSubmitting] = useState(false);
@@ -60,9 +59,10 @@ const EditProfile = (props) => {
         setValue([
           { name: response.data.name },
           { email: response.data.email },
-          { currency_id: response.data.currency_id },
+          { currency: response.data.currency },
         ]);
-        setState(prev => ({ ...prev, user: response.data, currentCurrency: response.data.currency }))
+        let { currency, ...rest } = response.data;
+        setState(prev => ({ ...prev, user: rest }));
       })
       .catch(error => {
         console.log('error', error.response);
@@ -82,7 +82,7 @@ const EditProfile = (props) => {
 
   const submitUpdateProfile = (data) => {
 
-    data.currency_id = state.currentCurrency.id;
+    data.currency_id = data.currency.id;
 
     axios.put(userApiEndpoints.profile, JSON.stringify(data))
       .then(response => {
@@ -92,7 +92,7 @@ const EditProfile = (props) => {
           setValue([
             { name: response.data.request.name },
             { email: response.data.request.email },
-            { currency_id: response.data.request.currency_id },
+            { currency: state.currencies.find(el => el.id === response.data.request.currency_id ? el : null) },
           ]);
 
           let { currency, ...rest } = response.data.request;
@@ -100,7 +100,7 @@ const EditProfile = (props) => {
 
           messages.show({
             severity: 'success',
-            detail: 'Your profile info updated successfully. Log back again to see the changes.',
+            detail: 'Your profile info updated successfully.',
             sticky: false,
             closable: false,
             life: 5000
@@ -168,24 +168,29 @@ const EditProfile = (props) => {
               </div>
               <div className="p-fluid">
                 <label>Currency</label>
-                <Dropdown
-                  name="currency_id"
-                  ref={register}
-                  filter={true}
-                  filterBy="currency_code,currency_name"
-                  filterPlaceholder="Search here"
-                  showClear={true}
-                  value={state.currentCurrency}
-                  options={state.currencies}
-                  style={{ width: '100%' }}
-                  onChange={e => {
+                <Controller
+                  name="currency"
+                  onChange={([e]) => {
                     setState(prev => ({ ...prev, currentCurrency: e.value }));
+                    return e.value;
                   }}
-                  itemTemplate={currencyTemplate}
-                  placeholder="Select a currency"
-                  optionLabel="currency_code"
+                  defaultValue={state.currency}
+                  control={control}
+                  as={
+                    <Dropdown
+                      filter={true}
+                      filterBy="currency_code,currency_name"
+                      filterPlaceholder="Search here"
+                      showClear={true}
+                      options={state.currencies}
+                      style={{ width: '100%' }}
+                      itemTemplate={currencyTemplate}
+                      placeholder="Select a currency"
+                      optionLabel="currency_code"
+                    />
+                  }
                 />
-                <p className="text-error">{errors.currency_id?.message}</p>
+                <p className="text-error">{errors.currency?.message}</p>
               </div>
               <div className="p-fluid">
                 <Button disabled={submitting} type="submit" label="Update Profile" icon="pi pi-refresh" className="p-button-raised" />
