@@ -5,11 +5,11 @@ import { getItem, loadState, saveState } from './Helpers';
 
 const globalState = {
   // Declare your global variable and functions here
-  layoutMode: getItem('layoutMode') ? getItem('layoutMode') : 'static',
-  layoutColorMode: getItem('layoutColorMode') ? getItem('layoutColorMode') : 'dark',
+  layoutMode: 'static',
+  layoutColorMode: 'dark',
   currencies: [],
   currentCurrency: null,
-  user: getItem('user') ? getItem('user') : ''
+  user: null
 };
 
 const useCustomState = () => {

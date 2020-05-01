@@ -27,13 +27,13 @@ const Setting = (props) => {
   }, []);
 
   const submitSetting = () => {
-    axios.put(currencyApiEndpoints.currency + '/' + getItem('user').id, JSON.stringify({ currency_id: state.currentCurrency.id }))
+    axios.put(currencyApiEndpoints.currency + '/' + state.user.id, JSON.stringify({ currency_id: state.currentCurrency.id }))
       .then(response => {
         console.log('success', response.data);
 
         if (response.status === 200) {
 
-          setItem('user', { ...getItem('user'), currency_id: response.data.request.currency_id });
+          setState(prev => ({ ...prev, currency_id: response.data.request.currency_id }));
 
           messages.show({
             severity: 'success',

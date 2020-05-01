@@ -96,7 +96,7 @@ const EditProfile = (props) => {
           ]);
 
           let { currency, ...rest } = response.data.request;
-          setItem('user', rest);
+          setState(prev => ({ ...prev, user: rest }));
 
           messages.show({
             severity: 'success',

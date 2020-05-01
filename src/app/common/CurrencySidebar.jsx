@@ -23,7 +23,7 @@ const CurrencySidebar = (props) => {
         .then(response => {
           // console.log(response.data);
           if (response.data.data.length > 0) {
-            let currency = response.data.data.find(el => el.id === getItem('user').currency_id ? el : null)
+            let currency = response.data.data.find(el => el.id === state.user.currency_id ? el : null)
 
             setState(prev => ({ ...prev, currencies: response.data.data, currentCurrency: currency }));
           }

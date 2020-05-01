@@ -10,7 +10,7 @@ import { Button } from 'primereact/button';
 
 import { userApiEndpoints } from './../../API';
 import axios from './../../Axios';
-import { getItem } from './../../Helpers';
+import { useTracked } from './../../Store';
 
 let messages;
 
@@ -22,10 +22,10 @@ const passwordValidationSchema = yup.object().shape({
 
 const Profile = (props) => {
 
+  const [state, setState] = useTracked();
   const { register, handleSubmit, errors, reset } = useForm({
     validationSchema: passwordValidationSchema
   });
-
   const [submitting, setSubmitting] = useState(false);
 
   const submitChangePassword = (data) => {
@@ -118,7 +118,7 @@ const Profile = (props) => {
                 Name:
                 </h3>
               <h3 className="color-highlight p-col-6">
-                {getItem('user').name}
+                {state.user.name}
               </h3>
             </div>
             <div className="p-grid p-nogutter p-justify-between">
@@ -126,7 +126,7 @@ const Profile = (props) => {
                 Email:
                 </h3>
               <h3 className="color-highlight p-col-6">
-                {getItem('user').email}
+                {state.user.email}
               </h3>
             </div>
 

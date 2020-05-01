@@ -40,5 +40,5 @@ export const setItem = (item, value) => {
 
 // Check if user logged in from localstorage
 export const isLoggedIn = () => {
-  return getItem('access_token') && getItem('token_created') && getItem('expires_in') && getItem('user')
+  return getItem('access_token') && getItem('token_created') && getItem('expires_in')
 };

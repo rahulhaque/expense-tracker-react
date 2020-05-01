@@ -328,7 +328,7 @@ const Expense = (props) => {
                   filterPlaceholder="Search here"
                   showClear={true}
                   value={datatable.expenseCategory}
-                  options={datatable.expenseCategories}
+                  options={expenseCategories}
                   style={{ width: '100%' }}
                   onChange={e => {
                     props.setFieldValue('category_id', e.value.id);
