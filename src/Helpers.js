@@ -5,15 +5,18 @@ export const loadState = () => {
       return undefined
     }
     return JSON.parse(serialisedState)
-  }
-  catch (e) {
+  } catch (error) {
     return undefined
   }
 };
 
 export const saveState = (state) => {
-  const serialisedState = JSON.stringify(state);
-  localStorage.setItem('state', serialisedState);
+  try {
+    const serialisedState = JSON.stringify(state);
+    localStorage.setItem('state', serialisedState);
+  } catch (error) {
+    // Ignore write errors.
+  }
 };
 
 // Get item from localstorage

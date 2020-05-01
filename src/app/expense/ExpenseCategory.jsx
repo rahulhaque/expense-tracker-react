@@ -26,27 +26,23 @@ const ExpenseCategory = (props) => {
   const { register, handleSubmit, reset, errors, setError } = useForm({
     validationSchema: expenseCategoryValidationSchema
   });
-  const [expenseCategories, setExpenseCategories] = useState({});
+  const [expenseCategories, setExpenseCategories] = useState([]);
   const [rowsPerPage, setRowsPerPage] = useState(5);
+  const [sortField, setSortField] = useState('id');
   const [sortOrder, setSortOrder] = useState(-1);
   const [fetching, setFetching] = useState(true);
   const [submitting, setSubmitting] = useState(false);
 
   useEffect(() => {
     requestExpenseCategories();
-  }, []);
+  }, [sortOrder, sortField]);
 
   const requestExpenseCategories = async (rows = 5, page = 1) => {
-    console.log(sortOrder);
-    await axios.get(expenseApiEndpoints.expenseCategory + '?page=' + page + '&per_page=' + rows + '&sort_order=' + (sortOrder === 1 ? 'asc' : 'desc'), {})
+    // console.log(sortOrder);
+    await axios.get(expenseApiEndpoints.expenseCategory + '?page=' + page + '&per_page=' + rows + '&sort_col=' + sortField + '&sort_order=' + (sortOrder === 1 ? 'asc' : 'desc'), {})
       .then(response => {
         // console.log(response.data);
         if (response.data.data) {
-          // this.setState(prevState => {
-          //   return {
-          //     rowsPerPage: rows
-          //   }
-          // });
           setExpenseCategories(response.data);
           setFetching(false);
         }
@@ -72,18 +68,18 @@ const ExpenseCategory = (props) => {
         image: 'image-class',
         input: 'input-class',
         actions: 'actions-class',
-        confirmButton: 'confirm-button-class',
-        cancelButton: 'cancel-button-class',
+        confirmButton: 'p-button p-button-raised p-button-danger p-button-text-icon-left',
+        cancelButton: 'p-button p-button-raised p-button-info p-button-text-icon-left',
         footer: 'footer-class'
       },
       title: 'Are you sure?',
       text: `Confirm to delete expense category ${data.category_name}.`,
       type: 'warning',
       showCancelButton: true,
-      confirmButtonText: 'Yes',
-      cancelButtonText: 'No',
-      confirmButtonColor: '#f76452',
-      cancelButtonColor: '#3085d6',
+      confirmButtonText: '<span class="pi pi-trash p-button-icon-left"></span><span class="p-button-text">Delete</span>',
+      cancelButtonText: '<span class="pi pi-ban p-button-icon-left"></span><span class="p-button-text">No</span>',
+      // confirmButtonColor: '#f76452',
+      // cancelButtonColor: '#3085d6',
       focusConfirm: false,
       focusCancel: true
     }).then((result) => {
@@ -230,7 +226,7 @@ const ExpenseCategory = (props) => {
                 </div>
               ) : (
                   <DataTable value={expenseCategories.data}
-                    // sortField="id"
+                    sortField={sortField}
                     sortOrder={sortOrder}
                     responsive={true}
                     paginator={true}
@@ -245,9 +241,9 @@ const ExpenseCategory = (props) => {
                       requestExpenseCategories(e.rows, (e.page + 1))
                     }}
                     onSort={e => {
-                      console.log(e);
-                      setSortOrder(sortOrder === -1 ? 1 : -1);
-                      requestExpenseCategories();
+                      // console.log(e);
+                      setSortField(e.sortField);
+                      setSortOrder(e.sortOrder);
                     }}
                     className="text-center"
                   >

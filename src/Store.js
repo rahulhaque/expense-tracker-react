@@ -1,7 +1,7 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { createContainer } from 'react-tracked';
 
-import { getItem } from './Helpers';
+import { getItem, loadState, saveState } from './Helpers';
 
 const globalState = {
   // Declare your global variable and functions here
@@ -12,6 +12,12 @@ const globalState = {
   user: getItem('user') ? getItem('user') : ''
 };
 
-const useMyState = () => useState(globalState);
+const useCustomState = () => {
+  const [processedState, setProcessedState] = useState((loadState() || globalState));
+  useEffect(() => {
+    saveState(processedState);
+  }, [processedState]);
+  return [processedState, setProcessedState];
+};
 
-export const { Provider, useTracked } = createContainer(useMyState);
+export const { Provider, useTracked } = createContainer(useCustomState);

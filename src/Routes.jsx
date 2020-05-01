@@ -48,17 +48,15 @@ export const GuestRoute = ({ component: Component, ...rest }) => (
   />
 );
 
-const Routes = () => {
-  return (
-    <HashRouter>
-      <Switch>
-        <Route exact path={'/'} component={Website} />
-        <GuestRoute exact path={'/login'} component={Login} />
-        <GuestRoute exact path={'/register'} component={Register} />
-        <PrivateRoute strict path={'/'} component={DashboardLayout} />
-      </Switch>
-    </HashRouter>
-  )
-};
+const Routes = () => (
+  <HashRouter>
+    <Switch>
+      <Route exact path={'/'} component={Website} />
+      <GuestRoute exact path={'/login'} component={Login} />
+      <GuestRoute exact path={'/register'} component={Register} />
+      <PrivateRoute strict path={'/'} component={DashboardLayout} />
+    </Switch>
+  </HashRouter>
+);
 
-export default Routes
+export default React.memo(Routes);

@@ -13,7 +13,7 @@ import { useTracked } from '../../Store';
 
 // import Dashboard from './../dashboard/Dashboard';
 import ExpenseCategory from './../expense/ExpenseCategory';
-// import Expense from "../app/expense/Expense";
+import Expense from './../expense/Expense';
 // import EditExpense from "../app/expense/EditExpense";
 // import Income from "../app/income/Income";
 // import EditIncome from "../app/income/EditIncome";
@@ -118,10 +118,10 @@ const DashboardLayout = (props) => {
           <PrivateRoute exact strict path={'/calendar'} component={TransactionCalendar} />
           <PrivateRoute exact strict path={'/setting'} component={Setting} />
           <PrivateRoute exact strict path={'/profile/edit'} component={EditProfile} />
+          <PrivateRoute exact strict path={'/expense'} component={Expense} />
           <PrivateRoute exact strict path={'/expense/category'} component={ExpenseCategory} />
           <Route render={props => <PageNotFound {...props} />} />
           {/* <PrivateRoute exact strict path={'/dashboard'} component={Dashboard} />
-            <PrivateRoute exact strict path={'/expense'} component={Expense} />
             <PrivateRoute exact strict path={'/expense/:expense_id/edit'} component={EditExpense} />
             <PrivateRoute exact strict path={'/income'} component={Income} />
             <PrivateRoute exact strict path={'/income/:income_id/edit'} component={EditIncome} />
