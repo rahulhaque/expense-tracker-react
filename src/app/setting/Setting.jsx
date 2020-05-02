@@ -76,7 +76,7 @@ const Setting = (props) => {
 
   return (
     <div>
-      <Helmet title="App Settings" />
+      <Helmet title="Settings" />
 
       <CurrencySidebar visible={visible} onHide={(e) => setVisible(false)} />
 

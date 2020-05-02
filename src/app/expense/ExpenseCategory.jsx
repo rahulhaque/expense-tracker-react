@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Helmet } from 'react-helmet';
 import * as yup from 'yup';
 import { Link } from "react-router-dom";
-import { useForm } from 'react-hook-form';
+import { useForm, Controller } from 'react-hook-form';
 import Swal from 'sweetalert2';
 
 import { Messages } from 'primereact/messages';
@@ -26,25 +26,33 @@ const ExpenseCategory = (props) => {
   const { register, handleSubmit, reset, errors, setError } = useForm({
     validationSchema: expenseCategoryValidationSchema
   });
-  const [expenseCategories, setExpenseCategories] = useState([]);
-  const [rowsPerPage, setRowsPerPage] = useState(5);
-  const [sortField, setSortField] = useState('id');
-  const [sortOrder, setSortOrder] = useState(-1);
-  const [fetching, setFetching] = useState(true);
+  const [datatable, setDatatable] = useState({
+    sortField: 'id',
+    sortOrder: -1,
+    rowsPerPage: 5,
+    currentPage: 1
+  });
+  const [expenseCategories, setExpenseCategories] = useState({
+    categories: {},
+    fetching: true
+  });
   const [submitting, setSubmitting] = useState(false);
 
   useEffect(() => {
     requestExpenseCategories();
-  }, [sortOrder, sortField]);
+  }, [datatable.sortOrder, datatable.sortField]);
 
   const requestExpenseCategories = async (rows = 5, page = 1) => {
     // console.log(sortOrder);
-    await axios.get(expenseApiEndpoints.expenseCategory + '?page=' + page + '&per_page=' + rows + '&sort_col=' + sortField + '&sort_order=' + (sortOrder === 1 ? 'asc' : 'desc'), {})
+    await axios.get(expenseApiEndpoints.expenseCategory + '?page=' + page + '&per_page=' + rows + '&sort_col=' + datatable.sortField + '&sort_order=' + (datatable.sortOrder === 1 ? 'asc' : 'desc'), {})
       .then(response => {
         // console.log(response.data);
         if (response.data.data) {
-          setExpenseCategories(response.data);
-          setFetching(false);
+          setExpenseCategories({
+            ...expenseCategories,
+            categories: response.data,
+            fetching: false
+          });
         }
         else {
 
@@ -220,30 +228,36 @@ const ExpenseCategory = (props) => {
             </div>
             <br />
             {
-              fetching ? (
+              expenseCategories.fetching ? (
                 <div className="p-grid p-justify-center p-align-center">
                   <ProgressSpinner style={{ height: '25px' }} strokeWidth={'4'} />
                 </div>
               ) : (
-                  <DataTable value={expenseCategories.data}
-                    sortField={sortField}
-                    sortOrder={sortOrder}
+                  <DataTable value={expenseCategories.categories.data}
+                    sortField={datatable.sortField}
+                    sortOrder={datatable.sortOrder}
                     responsive={true}
                     paginator={true}
-                    rows={rowsPerPage}
+                    rows={datatable.rowsPerPage}
                     rowsPerPageOptions={[5, 10, 20]}
-                    totalRecords={expenseCategories.total}
+                    totalRecords={expenseCategories.categories.total}
                     lazy={true}
-                    first={expenseCategories.from - 1}
+                    first={expenseCategories.categories.from - 1}
                     onPage={(e) => {
                       console.log(e);
-                      setRowsPerPage(e.rows);
+                      setDatatable({
+                        ...datatable,
+                        rowsPerPage: e.rows
+                      })
                       requestExpenseCategories(e.rows, (e.page + 1))
                     }}
                     onSort={e => {
                       // console.log(e);
-                      setSortField(e.sortField);
-                      setSortOrder(e.sortOrder);
+                      setDatatable({
+                        ...datatable,
+                        sortField: e.sortField,
+                        sortOrder: e.sortOrder,
+                      })
                     }}
                     className="text-center"
                   >

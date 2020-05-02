@@ -10,9 +10,7 @@ import 'primeicons/primeicons.css';
 import './extra/nova-light.css';
 import 'primeflex/primeflex.css';
 import '@fullcalendar/core/main.css';
-// import './fc-core.css';
 import '@fullcalendar/daygrid/main.css';
-// import './fc-daygrid.css';
 import '@fullcalendar/timegrid/main.css';
 import '@fullcalendar/list/main.css';
 import './extra/layout.css'; // Sigma theme from primereact

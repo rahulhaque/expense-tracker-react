@@ -4,11 +4,10 @@ import * as yup from 'yup';
 import * as dayjs from 'dayjs';
 import Swal from 'sweetalert2';
 import { Link } from 'react-router-dom';
-import { useForm } from 'react-hook-form';
+import { useForm, Controller } from 'react-hook-form';
 
 import { Messages } from 'primereact/messages';
 import { Card } from 'primereact/card';
-import { InputText } from 'primereact/inputtext';
 import { Button } from 'primereact/button';
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
@@ -36,7 +35,7 @@ const addExpenseValidationSchema = yup.object().shape({
 const Expense = (props) => {
 
   const [state, setState] = useTracked();
-  const { register, handleSubmit, errors, setError } = useForm({
+  const { register, handleSubmit, errors, setError, control } = useForm({
     validationSchema: addExpenseValidationSchema
   });
   const [datatable, setDatatable] = useState({
@@ -435,9 +434,9 @@ const Expense = (props) => {
                         return rowData.amount.toLocaleString() + ' ' + rowData.currency_name
                       }}
                     />
-                    <Column field="expense_date" header="Date" sortable={true}
+                    <Column field="transaction_date" header="Date" sortable={true}
                       body={(rowData, column) => {
-                        return dayjs(rowData.expense_date).format('YYYY-MM-DD hh:mm a')
+                        return dayjs(rowData.transaction_date).format('YYYY-MM-DD hh:mm a')
                       }}
                     />
                     <Column
