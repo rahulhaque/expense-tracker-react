@@ -66,7 +66,8 @@ const EditExpenseCategory = (props) => {
           });
         }
 
-      }).catch(error => {
+      })
+      .catch(error => {
         console.log('error', error);
 
         setSubmitting(false);

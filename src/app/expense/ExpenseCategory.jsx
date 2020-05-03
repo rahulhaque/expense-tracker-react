@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Helmet } from 'react-helmet';
 import * as yup from 'yup';
 import { Link } from "react-router-dom";
-import { useForm, Controller } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 import Swal from 'sweetalert2';
 
 import { Messages } from 'primereact/messages';
@@ -43,7 +43,10 @@ const ExpenseCategory = (props) => {
   }, [datatable.sortOrder, datatable.sortField]);
 
   const requestExpenseCategories = async (rows = 5, page = 1) => {
-    // console.log(sortOrder);
+    setExpenseCategories({
+      ...expenseCategories,
+      fetching: true
+    });
     await axios.get(expenseApiEndpoints.expenseCategory + '?page=' + page + '&per_page=' + rows + '&sort_col=' + datatable.sortField + '&sort_order=' + (datatable.sortOrder === 1 ? 'asc' : 'desc'), {})
       .then(response => {
         // console.log(response.data);
@@ -222,69 +225,66 @@ const ExpenseCategory = (props) => {
 
         <div className="p-col-12 p-md-6">
           <Card className="rounded-border">
-            <div>
-              <div className="p-card-title p-grid p-nogutter p-justify-between">View Expenses Categories</div>
-              <div className="p-card-subtitle">Here are list of expense categories.</div>
+            <div className='p-grid'>
+              <div className='p-col-6'>
+                <div className="p-card-title p-grid p-nogutter p-justify-between">View Expenses Categories</div>
+                <div className="p-card-subtitle">Here are list of expense categories.</div>
+              </div>
+              <div className="p-col-6" align="right">
+                {expenseCategories.fetching ? <ProgressSpinner style={{ height: '25px', width: '25px' }} strokeWidth={'4'} /> : ''}
+              </div>
             </div>
             <br />
-            {
-              expenseCategories.fetching ? (
-                <div className="p-grid p-justify-center p-align-center">
-                  <ProgressSpinner style={{ height: '25px' }} strokeWidth={'4'} />
-                </div>
-              ) : (
-                  <DataTable value={expenseCategories.categories.data}
-                    sortField={datatable.sortField}
-                    sortOrder={datatable.sortOrder}
-                    responsive={true}
-                    paginator={true}
-                    rows={datatable.rowsPerPage}
-                    rowsPerPageOptions={[5, 10, 20]}
-                    totalRecords={expenseCategories.categories.total}
-                    lazy={true}
-                    first={expenseCategories.categories.from - 1}
-                    onPage={(e) => {
-                      console.log(e);
-                      setDatatable({
-                        ...datatable,
-                        rowsPerPage: e.rows
-                      })
-                      requestExpenseCategories(e.rows, (e.page + 1))
-                    }}
-                    onSort={e => {
-                      // console.log(e);
-                      setDatatable({
-                        ...datatable,
-                        sortField: e.sortField,
-                        sortOrder: e.sortOrder,
-                      })
-                    }}
-                    className="text-center"
-                  >
-                    <Column field="id" header="Serial" sortable={true} />
-                    <Column field="category_name" header="Category Name" sortable={true} />
-                    <Column
-                      body={(rowData, column) => {
-                        // console.log(rowData);
-                        return (
-                          <div>
-                            <Link to={`/expense/category/${rowData.id}/edit`}><Button label="Edit"
-                              value={rowData.id}
-                              icon="pi pi-pencil"
-                              className="p-button-raised p-button-rounded p-button-info" /></Link>
-                            <Button label="Delete"
-                              onClick={() => deleteExpenseCategory(rowData)}
-                              icon="pi pi-trash"
-                              className="p-button-raised p-button-rounded p-button-danger" />
-                          </div>
-                        )
-                      }}
-                      header="Action"
-                      style={{ textAlign: 'center', width: '8em' }}
-                    />
-                  </DataTable>
-                )
-            }
+            <DataTable value={expenseCategories.categories.data}
+              sortField={datatable.sortField}
+              sortOrder={datatable.sortOrder}
+              responsive={true}
+              paginator={true}
+              rows={datatable.rowsPerPage}
+              rowsPerPageOptions={[5, 10, 20]}
+              totalRecords={expenseCategories.categories.total}
+              lazy={true}
+              first={expenseCategories.categories.from - 1}
+              onPage={(e) => {
+                console.log(e);
+                setDatatable({
+                  ...datatable,
+                  rowsPerPage: e.rows
+                })
+                requestExpenseCategories(e.rows, (e.page + 1))
+              }}
+              onSort={e => {
+                // console.log(e);
+                setDatatable({
+                  ...datatable,
+                  sortField: e.sortField,
+                  sortOrder: e.sortOrder,
+                })
+              }}
+              className="text-center"
+            >
+              <Column field="id" header="Serial" sortable={true} />
+              <Column field="category_name" header="Category Name" sortable={true} />
+              <Column
+                body={(rowData, column) => {
+                  // console.log(rowData);
+                  return (
+                    <div>
+                      <Link to={`/expense/category/${rowData.id}/edit`}><Button label="Edit"
+                        value={rowData.id}
+                        icon="pi pi-pencil"
+                        className="p-button-raised p-button-rounded p-button-info" /></Link>
+                      <Button label="Delete"
+                        onClick={() => deleteExpenseCategory(rowData)}
+                        icon="pi pi-trash"
+                        className="p-button-raised p-button-rounded p-button-danger" />
+                    </div>
+                  )
+                }}
+                header="Action"
+                style={{ textAlign: 'center', width: '8em' }}
+              />
+            </DataTable>
           </Card>
         </div>
 

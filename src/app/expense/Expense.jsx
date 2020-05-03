@@ -14,39 +14,38 @@ import { Column } from 'primereact/column';
 import { ProgressSpinner } from 'primereact/progressspinner';
 import { Dropdown } from 'primereact/dropdown';
 import { Calendar } from 'primereact/calendar';
-import { InputTextarea } from 'primereact/inputtextarea';
 
 import CurrencySidebar from './../common/CurrencySidebar';
 
 import axios from './../../Axios';
 import { expenseApiEndpoints } from './../../API';
-import { useTracked } from '../../Store';
+import { useTracked } from './../../Store';
 
 let messages;
 
 const addExpenseValidationSchema = yup.object().shape({
   expense_date: yup.string().required('Expense date field is required'),
-  category_id: yup.number().required('Expense category field is required'),
-  amount: yup.number().required('Expense amount field is required'),
+  category: yup.object().required('Expense category field is required'),
+  amount: yup.string().required('Expense amount field is required'),
   spent_on: yup.string().required('Spent on field is required').max(100, 'Spent on must be at most 100 characters'),
   remarks: yup.string().max(200, 'Remarks must be at most 200 characters'),
 });
 
 const Expense = (props) => {
 
-  const [state, setState] = useTracked();
-  const { register, handleSubmit, errors, setError, control } = useForm({
+  const [state] = useTracked();
+  const { register, handleSubmit, setValue, errors, setError, reset, control } = useForm({
     validationSchema: addExpenseValidationSchema
   });
   const [datatable, setDatatable] = useState({
-    expenseDate: new Date(),
-    expenseSummary: {},
     sortField: 'id',
     sortOrder: -1,
     rowsPerPage: 5,
     currentPage: 1
   });
   const [currencyVisible, setCurrencyVisible] = useState(false);
+  const [expenseSummary, setExpenseSummary] = useState({});
+  const [submitting, setSubmitting] = useState(false);
   const [expenseCategories, setExpenseCategories] = useState([]);
   const [expense, setExpense] = useState({ expenses: {}, fetching: true });
 
@@ -76,6 +75,7 @@ const Expense = (props) => {
   };
 
   const requestExpense = async () => {
+    setExpense({ ...expense, fetching: true });
     await axios.get(expenseApiEndpoints.expense + '?page=' + datatable.currentPage + '&sort_col=' + datatable.sortField + '&per_page=' + datatable.rowsPerPage + '&sort_order=' + (datatable.sortOrder > 0 ? 'asc' : 'desc'), {})
       .then(response => {
         // console.log('success', response.data);
@@ -102,10 +102,7 @@ const Expense = (props) => {
     await axios.get(expenseApiEndpoints.summary, {})
       .then(response => {
         // console.log(response.data);
-        setDatatable({
-          ...datatable,
-          expenseSummary: response.data.data
-        });
+        setExpenseSummary(response.data.data);
       })
       .catch(error => {
         console.log(error);
@@ -179,52 +176,54 @@ const Expense = (props) => {
       });
   };
 
-  // const submitExpense = (data) => {
-  //   axios.post(expenseApiEndpoints.expense, JSON.stringify(data))
-  //     .then(response => {
-  //       // console.log('success');
-  //       if (response.status === 201) {
+  const submitExpense = (data) => {
 
-  //         formikBag.resetForm();
-  //         formikBag.setSubmitting(false);
-  //         this.setState({
-  //           expenseCategory: '',
-  //         });
-  //         requestExpense();
-  //         requestExpenseSummary();
+    data.category_id = data.category.id;
+    data.currency_id = state.currentCurrency.id;
+    data.expense_date = dayjs(data.expense_date).format('YYYY-MM-DD HH:mm:ss');
 
-  //         messages.show({
-  //           severity: 'success',
-  //           detail: 'Your expense on ' + response.data.request.spent_on + ' added.',
-  //           sticky: false,
-  //           closable: false,
-  //           life: 5000
-  //         });
-  //       }
+    axios.post(expenseApiEndpoints.expense, JSON.stringify(data))
+      .then(response => {
+        // console.log('success');
+        if (response.status === 201) {
+          reset();
+          setSubmitting(false);
+          setValue('expense_date', dayjs(response.data.request.expense_date).toDate());
+          requestExpense();
+          requestExpenseSummary();
 
-  //     })
-  //     .catch(error => {
-  //       console.log('error');
-  //       console.log(error.response);
+          messages.show({
+            severity: 'success',
+            detail: 'Your expense on ' + response.data.request.spent_on + ' added.',
+            sticky: false,
+            closable: false,
+            life: 5000
+          });
+        }
+      })
+      .catch(error => {
+        console.log('error', error.response);
 
-  //       if (error.response.status === 401) {
-  //         messages.clear();
-  //         messages.show({
-  //           severity: 'error',
-  //           detail: 'Something went wrong. Try again.',
-  //           sticky: true,
-  //           closable: true,
-  //           life: 5000
-  //         });
-  //       }
+        if (error.response.status === 401) {
+          messages.clear();
+          messages.show({
+            severity: 'error',
+            detail: 'Something went wrong. Try again.',
+            sticky: true,
+            closable: true,
+            life: 5000
+          });
+        }
+        else if (error.response.status === 422) {
+          let errors = Object.entries(error.response.data).map(([key, value]) => {
+            return { name: key, message: value[0] }
+          });
+          setError(errors);
+        }
 
-  //       if (error.response.status === 422) {
-  //         formikBag.setErrors(error.response.data);
-  //       }
-
-  //       formikBag.setSubmitting(false)
-  //     })
-  // };
+        setSubmitting(false)
+      })
+  };
 
   const renderExpenseSummary = (data) => {
     if (data && data.length > 0) {
@@ -269,7 +268,7 @@ const Expense = (props) => {
                   <div className="p-panel-content-wrapper p-panel-content-wrapper-expanded" id="pr_id_1_content"
                     aria-labelledby="pr_id_1_label" aria-hidden="false">
                     <div className="p-panel-content">
-                      {renderExpenseSummary(datatable.expenseSummary.expense_month)}
+                      {renderExpenseSummary(expenseSummary.expense_month)}
                     </div>
                   </div>
                 </div>
@@ -281,7 +280,7 @@ const Expense = (props) => {
                   <div className="p-panel-content-wrapper p-panel-content-wrapper-expanded" id="pr_id_1_content"
                     aria-labelledby="pr_id_1_label" aria-hidden="false">
                     <div className="p-panel-content">
-                      {renderExpenseSummary(datatable.expenseSummary.expense_today)}
+                      {renderExpenseSummary(expenseSummary.expense_today)}
                     </div>
                   </div>
                 </div>
@@ -301,44 +300,50 @@ const Expense = (props) => {
               <div className="p-card-subtitle">Add your expense information below.</div>
             </div>
             <br />
-            <form onSubmit={handleSubmit(data => console.log(data))}>
+            <form onSubmit={handleSubmit(submitExpense)}>
               <div className="p-fluid">
-                <Calendar
+                <Controller
                   name="expense_date"
-                  dateFormat="yy-mm-dd"
-                  showTime={true}
-                  hourFormat="12"
-                  showButtonBar={true}
-                  value={datatable.expenseDate}
-                  onChange={(e) => {
-                    console.log(e.value);
-                    props.setFieldValue('expense_date', dayjs(e.value).format('YYYY-MM-DD HH:mm:ss'));
-                    this.setState({ expenseDate: e.value });
+                  defaultValue={new Date()}
+                  onChange={([e]) => {
+                    // console.log(e);
+                    return e.value;
                   }}
-                  maxDate={new Date()}
-                  touchUI={window.innerWidth < 768}
+                  control={control}
+                  as={
+                    <Calendar
+                      dateFormat="yy-mm-dd"
+                      showTime={true}
+                      hourFormat="12"
+                      showButtonBar={true}
+                      maxDate={new Date()}
+                      touchUI={window.innerWidth < 768}
+                    />
+                  }
                 />
                 <p className="text-error">{errors.expense_date?.message}</p>
               </div>
               <div className="p-fluid">
-                <Dropdown
-                  name="category_id"
-                  filter={true}
-                  filterPlaceholder="Search here"
-                  showClear={true}
-                  value={datatable.expenseCategory}
-                  options={expenseCategories}
-                  style={{ width: '100%' }}
-                  onChange={e => {
-                    props.setFieldValue('category_id', e.value.id);
-                    this.setState({
-                      expenseCategory: e.value,
-                    });
+                <Controller
+                  name="category"
+                  defaultValue={datatable.expenseCategory}
+                  onChange={([e]) => {
+                    return e.value
                   }}
-                  placeholder="Expense Category"
-                  optionLabel="category_name"
+                  control={control}
+                  as={
+                    <Dropdown
+                      filter={true}
+                      filterPlaceholder="Search here"
+                      showClear={true}
+                      options={expenseCategories}
+                      style={{ width: '100%' }}
+                      placeholder="Expense Category"
+                      optionLabel="category_name"
+                    />
+                  }
                 />
-                <p className="text-error">{errors.category_id?.message}</p>
+                <p className="text-error">{errors.category?.message}</p>
               </div>
               <div className="p-fluid">
                 <input type="text" ref={register} placeholder="Spent on" name="spent_on" className="p-inputtext p-component p-filled" />
@@ -346,7 +351,7 @@ const Expense = (props) => {
               </div>
               <div className="p-fluid">
                 <div className="p-inputgroup">
-                  <input type="text" ref={register} keyfilter="money" placeholder="Amount" name="amount" className="p-inputtext p-component p-filled" />
+                  <input type="number" step="0.00" ref={register} keyfilter="money" placeholder="Amount" name="amount" className="p-inputtext p-component p-filled" />
                   <Button
                     label={`${state.currencies.length === 0 ? 'loading' : state.currentCurrency.currency_code}`}
                     type="button"
@@ -355,11 +360,11 @@ const Expense = (props) => {
                 <p className="text-error">{errors.amount?.message}</p>
               </div>
               <div className="p-fluid">
-                <InputTextarea ref={register} rows={5} autoResize={true} placeholder="Remarks" name="remarks" />
+                <textarea ref={register} rows={5} autoResize={true} placeholder="Remarks" name="remarks" className="p-inputtext p-inputtextarea p-component p-inputtextarea-resizable" />
                 <p className="text-error">{errors.remarks?.message}</p>
               </div>
               <div className="p-fluid">
-                <Button disabled={props.isSubmitting} type="submit" label="Add Expense" icon="pi pi-plus"
+                <Button disabled={submitting} type="submit" label="Add Expense" icon="pi pi-plus"
                   className="p-button-raised" />
               </div>
             </form>
@@ -367,7 +372,7 @@ const Expense = (props) => {
             {/* <Formik
               initialValues={{
                 expense_date: dayjs().format('YYYY-MM-DD HH:mm:ss'),
-                category_id: '',
+                category: '',
                 amount: '',
                 spent_on: '',
                 remarks: ''
@@ -377,91 +382,86 @@ const Expense = (props) => {
 
         <div className="p-col-12 p-md-6">
           <Card className="rounded-border">
-            <div>
-              <div className="p-card-title p-grid p-nogutter p-justify-between">View Expenses</div>
-              <div className="p-card-subtitle">Here are few expenses you've added.</div>
+            <div className='p-grid'>
+              <div className='p-col-6'>
+                <div className="p-card-title p-grid p-nogutter p-justify-between">View Expenses</div>
+                <div className="p-card-subtitle">Here are few expenses you've added.</div>
+              </div>
+              <div className="p-col-6" align="right">
+                {expense.fetching ? <ProgressSpinner style={{ height: '25px', width: '25px' }} strokeWidth={'4'} /> : ''}
+              </div>
             </div>
             <br />
-            {
-              expense.fetching ? (
-                <div className="p-grid p-justify-center p-align-center">
-                  <ProgressSpinner style={{ height: '25px' }} strokeWidth={'4'} />
-                </div>
-              ) : (
-                  <DataTable value={expense.expenses.data}
-                    sortField={datatable.sortField}
-                    sortOrder={datatable.sortOrder}
-                    responsive={true}
-                    paginator={true}
-                    rows={datatable.rowsPerPage}
-                    rowsPerPageOptions={[5, 10, 20]}
-                    totalRecords={expense.expenses.total}
-                    lazy={true}
-                    // loading={datatable.expenseLoading}
-                    // loadingIcon={'pi pi-save'}
-                    first={expense.expenses.from - 1}
-                    onPage={(e) => {
-                      // console.log(e);
-                      setDatatable({
-                        ...datatable,
-                        currentPage: (e.page + 1),
-                        rowsPerPage: e.rows,
-                      });
-                      setExpense({
-                        ...expense,
-                        fetching: false
-                      });
-                    }}
-                    onSort={e => {
-                      // console.log(e);
-                      setDatatable({
-                        ...datatable,
-                        sortField: e.sortField,
-                        sortOrder: e.sortOrder,
-                      });
-                      setExpense({
-                        ...expense,
-                        fetching: false
-                      });
-                    }}
-                    className="text-center"
-                  >
-                    <Column field="id" header="Serial" sortable={true} />
-                    <Column field="spent_on" header="Spent On" sortable={true} />
-                    <Column field="category_name" header="Category" sortable={true} />
-                    <Column field="amount" header="Amount" sortable={true}
-                      body={(rowData, column) => {
-                        return rowData.amount.toLocaleString() + ' ' + rowData.currency_name
-                      }}
-                    />
-                    <Column field="transaction_date" header="Date" sortable={true}
-                      body={(rowData, column) => {
-                        return dayjs(rowData.transaction_date).format('YYYY-MM-DD hh:mm a')
-                      }}
-                    />
-                    <Column
-                      body={(rowData, column) => {
-                        // console.log(rowData);
-                        return (
-                          <div>
-                            <Link to={`/expense/${rowData.id}/edit`}>
-                              <Button label="Edit" value={rowData.id}
-                                icon="pi pi-pencil"
-                                className="p-button-raised p-button-rounded p-button-info" />
-                            </Link>
-                            <Button label="Delete"
-                              onClick={() => deleteExpense(rowData)}
-                              icon="pi pi-trash"
-                              className="p-button-raised p-button-rounded p-button-danger" />
-                          </div>
-                        )
-                      }}
-                      header="Action"
-                      style={{ textAlign: 'center', width: '8em' }}
-                    />
-                  </DataTable>
-                )
-            }
+            <DataTable value={expense.expenses.data}
+              sortField={datatable.sortField}
+              sortOrder={datatable.sortOrder}
+              responsive={true}
+              paginator={true}
+              rows={datatable.rowsPerPage}
+              rowsPerPageOptions={[5, 10, 20]}
+              totalRecords={expense.expenses.total}
+              lazy={true}
+              first={expense.expenses.from - 1}
+              onPage={(e) => {
+                // console.log(e);
+                setDatatable({
+                  ...datatable,
+                  currentPage: (e.page + 1),
+                  rowsPerPage: e.rows,
+                });
+                setExpense({
+                  ...expense,
+                  fetching: false
+                });
+              }}
+              onSort={e => {
+                // console.log(e);
+                setDatatable({
+                  ...datatable,
+                  sortField: e.sortField,
+                  sortOrder: e.sortOrder,
+                });
+                setExpense({
+                  ...expense,
+                  fetching: false
+                });
+              }}
+              className="text-center"
+            >
+              <Column field="id" header="Serial" sortable={true} />
+              <Column field="spent_on" header="Spent On" sortable={true} />
+              <Column field="category_name" header="Category" sortable={true} />
+              <Column field="amount" header="Amount" sortable={true}
+                body={(rowData, column) => {
+                  return rowData.amount.toLocaleString() + ' ' + rowData.currency_name
+                }}
+              />
+              <Column field="transaction_date" header="Date" sortable={true}
+                body={(rowData, column) => {
+                  return dayjs(rowData.transaction_date).format('YYYY-MM-DD hh:mm a')
+                }}
+              />
+              <Column
+                body={(rowData, column) => {
+                  // console.log(rowData);
+                  return (
+                    <div>
+                      <Link to={`/expense/${rowData.id}/edit`}>
+                        <Button label="Edit" value={rowData.id}
+                          icon="pi pi-pencil"
+                          className="p-button-raised p-button-rounded p-button-info" />
+                      </Link>
+                      <Button label="Delete"
+                        onClick={() => deleteExpense(rowData)}
+                        icon="pi pi-trash"
+                        className="p-button-raised p-button-rounded p-button-danger" />
+                    </div>
+                  )
+                }}
+                header="Action"
+                style={{ textAlign: 'center', width: '8em' }}
+              />
+            </DataTable>
           </Card>
         </div>
 

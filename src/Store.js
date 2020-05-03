@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { createContainer } from 'react-tracked';
 
-import { getItem, loadState, saveState } from './Helpers';
+import { loadState, saveState } from './Helpers';
 
 const globalState = {
   // Declare your global variable and functions here

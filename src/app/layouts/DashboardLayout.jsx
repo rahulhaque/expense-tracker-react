@@ -1,30 +1,32 @@
 import React, { useState } from 'react'
-
 import classNames from 'classnames';
-import { ScrollPanel } from "primereact/components/scrollpanel/ScrollPanel";
+import { Route, Switch } from 'react-router-dom';
+
+import { ScrollPanel } from 'primereact/scrollpanel';
+
 import AppTopbar from './../dashboard/AppTopbar';
-import AppInlineProfile from "./../dashboard/AppInlineProfile";
-import AppMenu from "./../dashboard/AppMenu";
+import AppInlineProfile from './../dashboard/AppInlineProfile';
+import AppMenu from './../dashboard/AppMenu';
 import AppFooter from './../dashboard/AppFooter';
-import { logout } from './../../Axios';
-import { Route, Switch } from "react-router-dom";
-import { PrivateRoute } from "./../../Routes";
-import { useTracked } from '../../Store';
 
 // import Dashboard from './../dashboard/Dashboard';
 import ExpenseCategory from './../expense/ExpenseCategory';
 import Expense from './../expense/Expense';
-// import EditExpense from "../app/expense/EditExpense";
-// import Income from "../app/income/Income";
-// import EditIncome from "../app/income/EditIncome";
+// import EditExpense from '../app/expense/EditExpense';
+// import Income from '../app/income/Income';
+// import EditIncome from '../app/income/EditIncome';
 import Profile from './../profile/Profile';
 import EditProfile from './../profile/EditProfile';
 import EditExpenseCategory from './../expense/EditExpenseCategory';
-// import IncomeCategory from "../app/income/IncomeCategory";
-// import EditIncomeCategory from "../app/income/EditIncomeCategory";
+// import IncomeCategory from '../app/income/IncomeCategory';
+// import EditIncomeCategory from '../app/income/EditIncomeCategory';
 import TransactionCalendar from './../calendar/TransactionCalendar';
 import Setting from './../setting/Setting';
 import PageNotFound from './../errors/404';
+
+import { logout } from './../../Axios';
+import { PrivateRoute } from './../../Routes';
+import { useTracked } from '../../Store';
 
 const isDesktop = () => {
   return window.innerWidth > 1024;
@@ -51,7 +53,6 @@ const menu = [
   { label: 'Profile', url: '/profile', icon: 'pi pi-fw pi-user', command: () => { } },
   { label: 'Logout', url: '', icon: 'pi pi-fw pi-power-off', command: () => logout() },
 ];
-
 
 const DashboardLayout = (props) => {
 
@@ -114,13 +115,13 @@ const DashboardLayout = (props) => {
       </div>
       <div className="layout-main" style={{ minHeight: '95vh' }}>
         <Switch>
-          <PrivateRoute exact strict path={'/profile'} component={Profile} />
-          <PrivateRoute exact strict path={'/calendar'} component={TransactionCalendar} />
-          <PrivateRoute exact strict path={'/setting'} component={Setting} />
-          <PrivateRoute exact strict path={'/profile/edit'} component={EditProfile} />
           <PrivateRoute exact strict path={'/expense'} component={Expense} />
           <PrivateRoute exact strict path={'/expense/category'} component={ExpenseCategory} />
           <PrivateRoute exact strict path={'/expense/category/:category_id/edit'} component={EditExpenseCategory} />
+          <PrivateRoute exact strict path={'/calendar'} component={TransactionCalendar} />
+          <PrivateRoute exact strict path={'/setting'} component={Setting} />
+          <PrivateRoute exact strict path={'/profile'} component={Profile} />
+          <PrivateRoute exact strict path={'/profile/edit'} component={EditProfile} />
           <Route render={props => <PageNotFound {...props} />} />
           {/* <PrivateRoute exact strict path={'/dashboard'} component={Dashboard} />
             <PrivateRoute exact strict path={'/expense/:expense_id/edit'} component={EditExpense} />

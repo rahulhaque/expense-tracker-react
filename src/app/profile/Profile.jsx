@@ -22,7 +22,7 @@ const passwordValidationSchema = yup.object().shape({
 
 const Profile = (props) => {
 
-  const [state, setState] = useTracked();
+  const [state] = useTracked();
   const { register, handleSubmit, errors, reset } = useForm({
     validationSchema: passwordValidationSchema
   });
