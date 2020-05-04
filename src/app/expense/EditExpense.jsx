@@ -22,7 +22,7 @@ const editExpenseValidationSchema = yup.object().shape({
   expense_date: yup.string().required('Expense date field is required'),
   category: yup.object().required('Expense category field is required'),
   amount: yup.number().required('Expense amount field is required'),
-  spent_on: yup.string().max(100, 'Spent on must be at most 100 characters').required('Spent on field is required'),
+  spent_on: yup.string().required('Spent on field is required').max(100, 'Spent on must be at most 100 characters'),
   remarks: yup.string().max(200, 'Remarks must be at most 200 characters'),
 });
 
@@ -237,19 +237,6 @@ const EditExpense = (props) => {
                   className="p-button-raised" />
               </div>
             </form>
-            {/* <Formik
-                enableReinitialize={true}
-                initialValues={this.state.expense}
-                validationSchema={
-
-                }
-                onSubmit={(values, formikBag) => {
-                  // console.log(values);
-                  this.submitUpdateExpense(values, formikBag);
-                }}
-                render={props => (
-
-                )} /> */}
           </Card>
         </div>
 
