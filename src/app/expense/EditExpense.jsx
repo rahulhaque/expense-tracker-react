@@ -28,27 +28,8 @@ const editExpenseValidationSchema = yup.object().shape({
 
 const EditExpense = (props) => {
 
-  // constructor() {
-  //   super();
-  //   this.state = {
-  //     expense: {
-  //       id: '',
-  //       amount: '',
-  //       category: '',
-  //       created_at: '',
-  //       created_by: '',
-  //       currency_id: '',
-  //       expense_date: '',
-  //       remarks: '',
-  //       spent_on: '',
-  //       updated_at: '',
-  //       updated_by: ''
-  //     }
-  //   }
-  // }
-
-  const [state] = useTracked();
-  const { register, handleSubmit, errors, setError, setValue, reset, control } = useForm({
+  const [state, setState] = useTracked();
+  const { register, handleSubmit, errors, setError, setValue, control } = useForm({
     validationSchema: editExpenseValidationSchema
   });
   const [submitting, setSubmitting] = useState(false);
@@ -80,10 +61,9 @@ const EditExpense = (props) => {
     await axios.get(expenseApiEndpoints.expense + '/' + props.match.params.expense_id, {})
       .then(response => {
         // console.log('success', response.data);
-
         setValue([
           { id: response.data.id },
-          { category: expenseCategories.find(el => el.id === response.data.category_id ? el : null) },
+          { category: response.data.category },
           { amount: response.data.amount },
           { created_at: response.data.created_at },
           { created_by: response.data.created_by },
@@ -94,10 +74,10 @@ const EditExpense = (props) => {
           { updated_at: response.data.updated_at },
           { updated_by: response.data.updated_by }
         ]);
+        setState(prev => ({ ...prev, currentCurrency: response.data.currency }));
       })
       .catch(error => {
-        console.log('error');
-        console.log(error.response);
+        console.log('error', error.response);
 
         if (error.response.status === 401) {
           messages.show({
@@ -113,15 +93,20 @@ const EditExpense = (props) => {
   };
 
   const submitUpdateExpense = (data) => {
-    axios.put(expenseApiEndpoints.expense + '/' + this.state.expense.id, JSON.stringify(data))
+
+    data.expense_date = dayjs(data.expense_date).format('YYYY-MM-DD HH:mm:ss');
+    data.category_id = data.category.id;
+    data.currency_id = state.currentCurrency.id;
+
+    console.log(data);
+
+    axios.put(expenseApiEndpoints.expense + '/' + props.match.params.expense_id, JSON.stringify(data))
       .then(response => {
         console.log('success');
         console.log(response.data.request);
 
         if (response.status === 200) {
-
           setSubmitting(false);
-          setValue(response.data.request);
 
           messages.show({
             severity: 'success',
@@ -137,7 +122,6 @@ const EditExpense = (props) => {
         console.log('error');
         console.log(error.response);
 
-        reset();
         setSubmitting(false);
 
         messages.clear();
@@ -184,7 +168,7 @@ const EditExpense = (props) => {
               <div className="p-card-subtitle">Edit selected expense information below.</div>
             </div>
             <br />
-            <form onSubmit={handleSubmit(data => console.log(data))}>
+            <form onSubmit={handleSubmit(submitUpdateExpense)}>
               <div className="p-fluid">
                 <label>Expense Date</label>
                 <Controller
