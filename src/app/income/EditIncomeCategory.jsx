@@ -7,28 +7,28 @@ import { Messages } from 'primereact/messages';
 import { Card } from 'primereact/card';
 import { Button } from 'primereact/button';
 
-import { expenseApiEndpoints } from './../../API';
+import { incomeApiEndpoints } from './../../API';
 import axios from './../../Axios';
 
 let messages;
 
-const expenseCategoryValidationSchema = yup.object().shape({
+const incomeCategoryValidationSchema = yup.object().shape({
   category_name: yup.string().required('Category name field is required').max(100, 'Category name must be at most 100 characters')
 });
 
-const EditExpenseCategory = (props) => {
+const EditIncomeCategory = (props) => {
 
   useEffect(() => {
-    requestExpenseCategory();
+    requestIncomeCategory();
   }, []);
 
   const { register, handleSubmit, errors, setError, setValue } = useForm({
-    validationSchema: expenseCategoryValidationSchema
+    validationSchema: incomeCategoryValidationSchema
   });
   const [submitting, setSubmitting] = useState(false);
 
-  const requestExpenseCategory = async () => {
-    await axios.get(expenseApiEndpoints.expenseCategory + '/' + props.match.params.category_id, {})
+  const requestIncomeCategory = async () => {
+    await axios.get(incomeApiEndpoints.incomeCategory + '/' + props.match.params.category_id, {})
       .then(response => {
         // console.log('success', response.data);
         setValue('category_name', response.data.category_name);
@@ -49,8 +49,8 @@ const EditExpenseCategory = (props) => {
       })
   };
 
-  const submitUpdateExpenseCategory = async (data) => {
-    await axios.put(expenseApiEndpoints.expenseCategory + '/' + props.match.params.category_id, JSON.stringify(data))
+  const submitUpdateIncomeCategory = async (data) => {
+    await axios.put(incomeApiEndpoints.incomeCategory + '/' + props.match.params.category_id, JSON.stringify(data))
       .then(response => {
         console.log('success', response.data.request);
 
@@ -59,7 +59,7 @@ const EditExpenseCategory = (props) => {
 
           messages.show({
             severity: 'success',
-            detail: 'Your expense category info updated successfully.',
+            detail: 'Your income category info updated successfully.',
             sticky: false,
             closable: false,
             life: 5000
@@ -95,7 +95,7 @@ const EditExpenseCategory = (props) => {
 
   return (
     <div>
-      <Helmet title="Edit Expense" />
+      <Helmet title="Edit Income" />
 
       <div className="p-grid p-nogutter">
         <div className="p-col-12">
@@ -110,11 +110,11 @@ const EditExpenseCategory = (props) => {
         <div className="p-col-12">
           <Card className="rounded-border">
             <div>
-              <div className="p-card-title p-grid p-nogutter p-justify-between">Edit Expense Category</div>
-              <div className="p-card-subtitle">Edit selected expense category information below.</div>
+              <div className="p-card-title p-grid p-nogutter p-justify-between">Edit Income Category</div>
+              <div className="p-card-subtitle">Edit selected income category information below.</div>
             </div>
             <br />
-            <form onSubmit={handleSubmit(submitUpdateExpenseCategory)}>
+            <form onSubmit={handleSubmit(submitUpdateIncomeCategory)}>
               <div className="p-fluid">
                 <label>Category Name</label>
                 <div className="p-fluid">
@@ -135,4 +135,4 @@ const EditExpenseCategory = (props) => {
   )
 }
 
-export default React.memo(EditExpenseCategory);
+export default React.memo(EditIncomeCategory);
