@@ -18,24 +18,37 @@ import { Calendar } from 'primereact/calendar';
 import CurrencySidebar from './../common/CurrencySidebar';
 
 import axios from './../../Axios';
-import { expenseApiEndpoints } from './../../API';
+import { incomeApiEndpoints } from './../../API';
 import { useTracked } from './../../Store';
 
 let messages;
 
-const addExpenseValidationSchema = yup.object().shape({
-  expense_date: yup.string().required('Expense date field is required'),
-  category: yup.object().required('Expense category field is required'),
-  amount: yup.string().required('Expense amount field is required'),
-  spent_on: yup.string().required('Spent on field is required').max(100, 'Spent on must be at most 100 characters'),
-  remarks: yup.string().max(200, 'Remarks must be at most 200 characters'),
+const addIncomeValidationSchema = yup.object().shape({
+  source: yup.string().required('Income source field is required').max(100, 'Income source must be at most 100 characters'),
+  category: yup.object().required('Income category field is required'),
+  notes: yup.string().max(200, 'Income notes must be at most 200 characters'),
+  amount: yup.string().required('Income amount field is required'),
 });
 
-const Expense = (props) => {
+const Income = (props) => {
+
+  // constructor() {
+  //   super();
+  //   this.state = {
+  //     incomeDate: new Date(),
+  //     income: [],
+  //     incomeSummary: {},
+  //     incomeLoading: true,
+  //     sortField: 'id',
+  //     sortOrder: -1,
+  //     rowsPerPage: 5,
+  //     currentPage: 1
+  //   }
+  // }
 
   const [state] = useTracked();
   const { register, handleSubmit, setValue, errors, setError, reset, control } = useForm({
-    validationSchema: addExpenseValidationSchema
+    validationSchema: addIncomeValidationSchema
   });
   const [datatable, setDatatable] = useState({
     sortField: 'id',
@@ -44,26 +57,26 @@ const Expense = (props) => {
     currentPage: 1
   });
   const [currencyVisible, setCurrencyVisible] = useState(false);
-  const [expenseSummary, setExpenseSummary] = useState({});
+  const [incomeSummary, setIncomeSummary] = useState({});
   const [submitting, setSubmitting] = useState(false);
-  const [expenseCategories, setExpenseCategories] = useState([]);
-  const [expense, setExpense] = useState({ expenses: {}, fetching: true });
+  const [incomeCategories, setIncomeCategories] = useState([]);
+  const [income, setIncome] = useState({ incomes: {}, fetching: true });
 
   useEffect(() => {
-    requestExpenseSummary();
-    requestExpenseCategory();
+    requestIncomeSummary();
+    requestIncomeCategory();
   }, []);
 
   useEffect(() => {
-    requestExpense();
+    requestIncome();
   }, [datatable.sortField, datatable.sortOrder, datatable.rowsPerPage]);
 
-  const requestExpenseCategory = async () => {
-    await axios.get(expenseApiEndpoints.expenseCategory, {})
+  const requestIncomeCategory = async () => {
+    await axios.get(incomeApiEndpoints.incomeCategory, {})
       .then(response => {
         // console.log(response.data);
         if (response.data.data.length > 0) {
-          setExpenseCategories(response.data.data);
+          setIncomeCategories(response.data.data);
         }
         else {
 
@@ -74,21 +87,21 @@ const Expense = (props) => {
       });
   };
 
-  const requestExpense = async () => {
-    setExpense({ ...expense, fetching: true });
-    await axios.get(expenseApiEndpoints.expense + '?page=' + datatable.currentPage + '&sort_col=' + datatable.sortField + '&per_page=' + datatable.rowsPerPage + '&sort_order=' + (datatable.sortOrder > 0 ? 'asc' : 'desc'), {})
+  const requestIncome = async () => {
+    setIncome({ ...income, fetching: true });
+    await axios.get(incomeApiEndpoints.income + '?page=' + datatable.currentPage + '&sort_col=' + datatable.sortField + '&per_page=' + datatable.rowsPerPage + '&sort_order=' + (datatable.sortOrder > 0 ? 'asc' : 'desc'), {})
       .then(response => {
         // console.log('success', response.data);
         if (response.data.data) {
-          setExpense({
-            ...expense,
-            expenses: response.data,
+          setIncome({
+            ...income,
+            incomes: response.data,
             fetching: false
           });
         }
         else {
-          setExpense({
-            ...expense,
+          setIncome({
+            ...income,
             fetching: false
           });
         }
@@ -98,18 +111,18 @@ const Expense = (props) => {
       });
   };
 
-  const requestExpenseSummary = async () => {
-    await axios.get(expenseApiEndpoints.summary, {})
+  const requestIncomeSummary = async () => {
+    await axios.get(incomeApiEndpoints.summary, {})
       .then(response => {
         // console.log(response.data);
-        setExpenseSummary(response.data.data);
+        setIncomeSummary(response.data.data);
       })
       .catch(error => {
         console.log(error);
       });
   };
 
-  const deleteExpense = (data) => {
+  const deleteIncome = (data) => {
     // console.log(data);
     Swal.fire({
       customClass: {
@@ -127,7 +140,7 @@ const Expense = (props) => {
         footer: 'footer-class'
       },
       title: 'Are you sure?',
-      text: `Confirm to delete expense on ${data.spent_on}.`,
+      text: `Confirm to delete income on ${data.spent_on}.`,
       type: 'warning',
       showCancelButton: true,
       confirmButtonText: '<span class="pi pi-trash p-button-icon-left"></span><span class="p-button-text">Delete</span>',
@@ -139,17 +152,17 @@ const Expense = (props) => {
     })
       .then((result) => {
         if (result.value) {
-          axios.delete(expenseApiEndpoints.expense + '/' + data.id, {})
+          axios.delete(incomeApiEndpoints.income + '/' + data.id, {})
             .then(response => {
               // console.log(response.data);
               if (response.status === 200) {
 
-                requestExpense();
-                requestExpenseSummary();
+                requestIncome();
+                requestIncomeSummary();
 
                 messages.show({
                   severity: 'success',
-                  detail: 'Your expense on ' + data.spent_on + ' deleted successfully.',
+                  detail: 'Your income on ' + data.spent_on + ' deleted successfully.',
                   sticky: false,
                   closable: false,
                   life: 5000
@@ -176,25 +189,25 @@ const Expense = (props) => {
       });
   };
 
-  const submitExpense = (data) => {
+  const submitIncome = (data) => {
 
     data.category_id = data.category.id;
     data.currency_id = state.currentCurrency.id;
-    data.expense_date = dayjs(data.expense_date).format('YYYY-MM-DD HH:mm:ss');
+    data.income_date = dayjs(data.income_date).format('YYYY-MM-DD HH:mm:ss');
 
-    axios.post(expenseApiEndpoints.expense, JSON.stringify(data))
+    axios.post(incomeApiEndpoints.income, JSON.stringify(data))
       .then(response => {
         // console.log('success');
         if (response.status === 201) {
           reset();
           setSubmitting(false);
-          setValue('expense_date', dayjs(response.data.request.expense_date).toDate());
-          requestExpense();
-          requestExpenseSummary();
+          setValue('income_date', dayjs(response.data.request.income_date).toDate());
+          requestIncome();
+          requestIncomeSummary();
 
           messages.show({
             severity: 'success',
-            detail: 'Your expense on ' + response.data.request.spent_on + ' added.',
+            detail: 'Your income on ' + response.data.request.spent_on + ' added.',
             sticky: false,
             closable: false,
             life: 5000
@@ -225,7 +238,7 @@ const Expense = (props) => {
       })
   };
 
-  const renderExpenseSummary = (data) => {
+  const renderIncomeSummary = (data) => {
     if (data && data.length > 0) {
       return data.map((item, index) => {
         return <div key={index}>
@@ -236,7 +249,7 @@ const Expense = (props) => {
     }
     else {
       return <div>
-        <div className="text-center">No expense data found.</div>
+        <div className="text-center">No income data found.</div>
         <hr />
       </div>
     }
@@ -244,7 +257,7 @@ const Expense = (props) => {
 
   return (
     <div>
-      <Helmet title="Expense" />
+      <Helmet title="Income" />
 
       <CurrencySidebar visible={currencyVisible} onHide={(e) => setCurrencyVisible(false)} />
 
@@ -256,19 +269,19 @@ const Expense = (props) => {
         </div>
       </div>
 
-      <div className="p-grid">
+      <div className="p-grid p-nogutter">
         <div className="p-col-12">
           <div className="p-fluid">
 
             <div className="p-grid">
               <div className="p-col-6">
                 <div className="p-panel p-component">
-                  <div className="p-panel-titlebar"><span className="color-title text-bold">Expense This Month</span>
+                  <div className="p-panel-titlebar"><span className="color-title text-bold">Income This Month</span>
                   </div>
                   <div className="p-panel-content-wrapper p-panel-content-wrapper-expanded" id="pr_id_1_content"
                     aria-labelledby="pr_id_1_label" aria-hidden="false">
                     <div className="p-panel-content">
-                      {renderExpenseSummary(expenseSummary.expense_month)}
+                      {renderIncomeSummary(incomeSummary.income_month)}
                     </div>
                   </div>
                 </div>
@@ -276,11 +289,11 @@ const Expense = (props) => {
 
               <div className="p-col-6">
                 <div className="p-panel p-component">
-                  <div className="p-panel-titlebar"><span className="color-title text-bold">Expense Today</span></div>
+                  <div className="p-panel-titlebar"><span className="color-title text-bold">Income Today</span></div>
                   <div className="p-panel-content-wrapper p-panel-content-wrapper-expanded" id="pr_id_1_content"
                     aria-labelledby="pr_id_1_label" aria-hidden="false">
                     <div className="p-panel-content">
-                      {renderExpenseSummary(expenseSummary.expense_today)}
+                      {renderIncomeSummary(incomeSummary.income_today)}
                     </div>
                   </div>
                 </div>
@@ -296,14 +309,14 @@ const Expense = (props) => {
         <div className="p-col-12 p-md-6">
           <Card className="rounded-border">
             <div>
-              <div className="p-card-title p-grid p-nogutter p-justify-between">Add Expense</div>
-              <div className="p-card-subtitle">Add your expense information below.</div>
+              <div className="p-card-title p-grid p-nogutter p-justify-between">Add Income</div>
+              <div className="p-card-subtitle">Add your income information below.</div>
             </div>
             <br />
-            <form onSubmit={handleSubmit(submitExpense)}>
+            <form onSubmit={handleSubmit(submitIncome)}>
               <div className="p-fluid">
                 <Controller
-                  name="expense_date"
+                  name="income_date"
                   defaultValue={new Date()}
                   onChange={([e]) => {
                     // console.log(e);
@@ -321,12 +334,12 @@ const Expense = (props) => {
                     />
                   }
                 />
-                <p className="text-error">{errors.expense_date?.message}</p>
+                <p className="text-error">{errors.income_date?.message}</p>
               </div>
               <div className="p-fluid">
                 <Controller
                   name="category"
-                  defaultValue={datatable.expenseCategory}
+                  defaultValue={datatable.incomeCategory}
                   onChange={([e]) => {
                     return e.value
                   }}
@@ -336,9 +349,9 @@ const Expense = (props) => {
                       filter={true}
                       filterPlaceholder="Search here"
                       showClear={true}
-                      options={expenseCategories}
+                      options={incomeCategories}
                       style={{ width: '100%' }}
-                      placeholder="Expense Category"
+                      placeholder="Income Category"
                       optionLabel="category_name"
                     />
                   }
@@ -346,8 +359,8 @@ const Expense = (props) => {
                 <p className="text-error">{errors.category?.message}</p>
               </div>
               <div className="p-fluid">
-                <input type="text" ref={register} placeholder="Spent On" name="spent_on" className="p-inputtext p-component p-filled" />
-                <p className="text-error">{errors.spent_on?.message}</p>
+                <input type="text" ref={register} placeholder="Income Source" name="source" className="p-inputtext p-component p-filled" />
+                <p className="text-error">{errors.source?.message}</p>
               </div>
               <div className="p-fluid">
                 <div className="p-inputgroup">
@@ -360,11 +373,11 @@ const Expense = (props) => {
                 <p className="text-error">{errors.amount?.message}</p>
               </div>
               <div className="p-fluid">
-                <textarea ref={register} rows={5} autoResize={true} placeholder="Remarks" name="remarks" className="p-inputtext p-inputtextarea p-component p-inputtextarea-resizable" />
-                <p className="text-error">{errors.remarks?.message}</p>
+                <textarea ref={register} rows={5} autoResize={true} placeholder="Income Notes" name="notes" className="p-inputtext p-inputtextarea p-component p-inputtextarea-resizable" />
+                <p className="text-error">{errors.notes?.message}</p>
               </div>
               <div className="p-fluid">
-                <Button disabled={submitting} type="submit" label="Add Expense" icon="pi pi-plus"
+                <Button disabled={submitting} type="submit" label="Add Income" icon="pi pi-plus"
                   className="p-button-raised" />
               </div>
             </form>
@@ -375,24 +388,24 @@ const Expense = (props) => {
           <Card className="rounded-border">
             <div className='p-grid'>
               <div className='p-col-6'>
-                <div className="p-card-title p-grid p-nogutter p-justify-between">View Expenses</div>
-                <div className="p-card-subtitle">Here are few expenses you've added.</div>
+                <div className="p-card-title p-grid p-nogutter p-justify-between">View Incomes</div>
+                <div className="p-card-subtitle">Here are few incomes you've added.</div>
               </div>
               <div className="p-col-6" align="right">
-                {expense.fetching ? <ProgressSpinner style={{ height: '25px', width: '25px' }} strokeWidth={'4'} /> : ''}
+                {income.fetching ? <ProgressSpinner style={{ height: '25px', width: '25px' }} strokeWidth={'4'} /> : ''}
               </div>
             </div>
             <br />
-            <DataTable value={expense.expenses.data}
+            <DataTable value={income.incomes.data}
               sortField={datatable.sortField}
               sortOrder={datatable.sortOrder}
               responsive={true}
               paginator={true}
               rows={datatable.rowsPerPage}
               rowsPerPageOptions={[5, 10, 20]}
-              totalRecords={expense.expenses.total}
+              totalRecords={income.incomes.total}
               lazy={true}
-              first={expense.expenses.from - 1}
+              first={income.incomes.from - 1}
               onPage={(e) => {
                 // console.log(e);
                 setDatatable({
@@ -400,8 +413,8 @@ const Expense = (props) => {
                   currentPage: (e.page + 1),
                   rowsPerPage: e.rows,
                 });
-                setExpense({
-                  ...expense,
+                setIncome({
+                  ...income,
                   fetching: false
                 });
               }}
@@ -412,24 +425,23 @@ const Expense = (props) => {
                   sortField: e.sortField,
                   sortOrder: e.sortOrder,
                 });
-                setExpense({
-                  ...expense,
+                setIncome({
+                  ...income,
                   fetching: false
                 });
               }}
               className="text-center"
             >
               <Column field="id" header="Serial" sortable={true} />
-              <Column field="spent_on" header="Spent On" sortable={true} />
-              <Column field="category_name" header="Category" sortable={true} />
+              <Column field="source" header="Source" sortable={true} />
               <Column field="amount" header="Amount" sortable={true}
                 body={(rowData, column) => {
                   return rowData.amount.toLocaleString() + ' ' + rowData.currency_name
                 }}
               />
-              <Column field="transaction_date" header="Date" sortable={true}
+              <Column field="income_date" header="Date" sortable={true}
                 body={(rowData, column) => {
-                  return dayjs(rowData.transaction_date).format('YYYY-MM-DD hh:mm a')
+                  return dayjs(rowData.income_date).format('YYYY-MM-DD hh:mm a')
                 }}
               />
               <Column
@@ -437,13 +449,13 @@ const Expense = (props) => {
                   // console.log(rowData);
                   return (
                     <div>
-                      <Link to={`/expense/${rowData.id}/edit`}>
+                      <Link to={`/income/${rowData.id}/edit`}>
                         <Button label="Edit" value={rowData.id}
                           icon="pi pi-pencil"
                           className="p-button-raised p-button-rounded p-button-info" />
                       </Link>
                       <Button label="Delete"
-                        onClick={() => deleteExpense(rowData)}
+                        onClick={() => deleteIncome(rowData)}
                         icon="pi pi-trash"
                         className="p-button-raised p-button-rounded p-button-danger" />
                     </div>
@@ -462,4 +474,4 @@ const Expense = (props) => {
   )
 }
 
-export default Expense;
+export default React.memo(Income);
