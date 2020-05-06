@@ -32,20 +32,6 @@ const addIncomeValidationSchema = yup.object().shape({
 
 const Income = (props) => {
 
-  // constructor() {
-  //   super();
-  //   this.state = {
-  //     incomeDate: new Date(),
-  //     income: [],
-  //     incomeSummary: {},
-  //     incomeLoading: true,
-  //     sortField: 'id',
-  //     sortOrder: -1,
-  //     rowsPerPage: 5,
-  //     currentPage: 1
-  //   }
-  // }
-
   const [state] = useTracked();
   const { register, handleSubmit, setValue, errors, setError, reset, control } = useForm({
     validationSchema: addIncomeValidationSchema
