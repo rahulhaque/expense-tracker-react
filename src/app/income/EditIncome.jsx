@@ -12,41 +12,41 @@ import { Dropdown } from 'primereact/dropdown';
 
 import CurrencySidebar from './../common/CurrencySidebar';
 
-import { expenseApiEndpoints } from './../../API';
+import { incomeApiEndpoints } from './../../API';
 import axios from './../../Axios';
 import { useTracked } from './../../Store';
 
 let messages;
 
-const editExpenseValidationSchema = yup.object().shape({
-  expense_date: yup.string().required('Expense date field is required'),
-  category: yup.object().required('Expense category field is required'),
-  amount: yup.number().required('Expense amount field is required'),
-  spent_on: yup.string().required('Spent on field is required').max(100, 'Spent on must be at most 100 characters'),
-  remarks: yup.string().max(200, 'Remarks must be at most 200 characters'),
+const editIncomeValidationSchema = yup.object().shape({
+  income_date: yup.string().required('Income date field is required'),
+  category: yup.object().required('Income category field is required'),
+  source: yup.string().required('Spent on field is required').max(100, 'Spent on must be at most 100 characters'),
+  amount: yup.number().required('Income amount field is required'),
+  notes: yup.string().max(200, 'Remarks must be at most 200 characters'),
 });
 
-const EditExpense = (props) => {
+const EditIncome = (props) => {
 
   const [state, setState] = useTracked();
   const { register, handleSubmit, errors, setError, setValue, control } = useForm({
-    validationSchema: editExpenseValidationSchema
+    validationSchema: editIncomeValidationSchema
   });
   const [submitting, setSubmitting] = useState(false);
   const [currencyVisible, setCurrencyVisible] = useState(false);
-  const [expenseCategories, setExpenseCategories] = useState([]);
+  const [incomeCategories, setIncomeCategories] = useState([]);
 
   useEffect(() => {
-    requestExpenseCategory();
-    requestExpenseInfo();
+    requestIncomeCategory();
+    requestIncomeInfo();
   }, []);
 
-  const requestExpenseCategory = async () => {
-    await axios.get(expenseApiEndpoints.expenseCategory, {})
+  const requestIncomeCategory = async () => {
+    await axios.get(incomeApiEndpoints.incomeCategory, {})
       .then(response => {
         // console.log(response.data);
         if (response.data.data.length > 0) {
-          setExpenseCategories(response.data.data);
+          setIncomeCategories(response.data.data);
         }
         else {
 
@@ -57,17 +57,17 @@ const EditExpense = (props) => {
       });
   };
 
-  const requestExpenseInfo = async () => {
-    await axios.get(expenseApiEndpoints.expense + '/' + props.match.params.expense_id, {})
+  const requestIncomeInfo = async () => {
+    await axios.get(incomeApiEndpoints.income + '/' + props.match.params.income_id, {})
       .then(response => {
-        // console.log('success', response.data);
+        console.log('success', response.data.category);
         setValue([
           { id: response.data.id },
-          { expense_date: dayjs(response.data.transaction_date).toDate() },
+          { income_date: dayjs(response.data.transaction_date).toDate() },
           { category: response.data.category },
+          { source: response.data.source },
           { amount: response.data.amount },
-          { spent_on: response.data.spent_on },
-          { remarks: response.data.remarks },
+          { notes: response.data.remarks },
           { currency_id: response.data.currency_id },
         ]);
         setState(prev => ({ ...prev, currentCurrency: response.data.currency }));
@@ -88,22 +88,24 @@ const EditExpense = (props) => {
       })
   };
 
-  const submitUpdateExpense = (data) => {
+  const submitUpdateIncome = (data) => {
 
-    data.expense_date = dayjs(data.expense_date).format('YYYY-MM-DD HH:mm:ss');
+    data.income_date = dayjs(data.income_date).format('YYYY-MM-DD HH:mm:ss');
     data.category_id = data.category.id;
     data.currency_id = state.currentCurrency.id;
 
-    axios.put(expenseApiEndpoints.expense + '/' + props.match.params.expense_id, JSON.stringify(data))
+    console.log(data);
+
+    axios.put(incomeApiEndpoints.income + '/' + props.match.params.income_id, JSON.stringify(data))
       .then(response => {
-        // console.log('success', response.data.request);
+        console.log('success', response.data.request);
 
         if (response.status === 200) {
           setSubmitting(false);
 
           messages.show({
             severity: 'success',
-            detail: 'Your expense info updated successfully.',
+            detail: 'Your income info updated successfully.',
             sticky: false,
             closable: false,
             life: 5000
@@ -112,8 +114,7 @@ const EditExpense = (props) => {
 
       })
       .catch(error => {
-        console.log('error');
-        console.log(error.response);
+        console.log('error', error.response);
 
         setSubmitting(false);
 
@@ -140,7 +141,7 @@ const EditExpense = (props) => {
 
   return (
     <div>
-      <Helmet title="Edit Expense" />
+      <Helmet title="Edit Income" />
 
       <CurrencySidebar visible={currencyVisible} onHide={(e) => setCurrencyVisible(false)} />
 
@@ -157,15 +158,15 @@ const EditExpense = (props) => {
         <div className="p-col-12">
           <Card className="rounded-border">
             <div>
-              <div className="p-card-title p-grid p-nogutter p-justify-between">Edit Expense</div>
-              <div className="p-card-subtitle">Edit selected expense information below.</div>
+              <div className="p-card-title p-grid p-nogutter p-justify-between">Edit Income</div>
+              <div className="p-card-subtitle">Edit selected income information below.</div>
             </div>
             <br />
-            <form onSubmit={handleSubmit(submitUpdateExpense)}>
+            <form onSubmit={handleSubmit(submitUpdateIncome)}>
               <div className="p-fluid">
-                <label>Expense Date</label>
+                <label>Income Date</label>
                 <Controller
-                  name="expense_date"
+                  name="income_date"
                   onChange={([e]) => {
                     return e.value;
                   }}
@@ -180,14 +181,14 @@ const EditExpense = (props) => {
                     />
                   }
                 />
-                <p className="text-error">{errors.expense_date?.message}</p>
+                <p className="text-error">{errors.income_date?.message}</p>
               </div>
               <div className="p-fluid">
-                <label>Expense Category</label>
+                <label>Income Category</label>
                 <Controller
                   name="category"
                   onChange={([e]) => {
-                    return e.value;
+                    return e.value
                   }}
                   control={control}
                   as={
@@ -195,14 +196,19 @@ const EditExpense = (props) => {
                       filter={true}
                       filterPlaceholder="Search here"
                       showClear={true}
-                      options={expenseCategories}
+                      options={incomeCategories}
                       style={{ width: '100%' }}
-                      placeholder="Expense Category"
+                      placeholder="Income Category"
                       optionLabel="category_name"
                     />
                   }
                 />
                 <p className="text-error">{errors.category?.message}</p>
+              </div>
+              <div className="p-fluid">
+                <label>Income Source</label>
+                <input type="text" ref={register} name="source" className="p-inputtext p-component p-filled" />
+                <p className="text-error">{errors.source?.message}</p>
               </div>
               <div className="p-fluid">
                 <label>Amount</label>
@@ -216,14 +222,9 @@ const EditExpense = (props) => {
                 <p className="text-error">{errors.amount?.message}</p>
               </div>
               <div className="p-fluid">
-                <label>Spent On</label>
-                <input type="text" ref={register} name="spent_on" className="p-inputtext p-component p-filled" />
-                <p className="text-error">{errors.spent_on?.message}</p>
-              </div>
-              <div className="p-fluid">
-                <label>Remarks</label>
-                <textarea ref={register} rows={5} autoResize={true} placeholder="" name="remarks" className="p-inputtext p-inputtextarea p-component p-inputtextarea-resizable" />
-                <p className="text-error">{errors.remarks?.message}</p>
+                <label>Income Notes</label>
+                <textarea ref={register} rows={5} autoResize={true} placeholder="" name="notes" className="p-inputtext p-inputtextarea p-component p-inputtextarea-resizable" />
+                <p className="text-error">{errors.notes?.message}</p>
               </div>
               <div className="p-fluid">
                 <Button disabled={submitting} type="submit" label="Save Changes" icon="pi pi-save"
@@ -239,4 +240,4 @@ const EditExpense = (props) => {
   )
 }
 
-export default React.memo(EditExpense);
+export default React.memo(EditIncome);

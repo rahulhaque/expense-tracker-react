@@ -52,15 +52,14 @@ const TransactionCalendar = (props) => {
   console.log(events);
 
   useEffect(() => {
-    if (events.length === 0) {
-      requestTransaction();
-    }
-  });
+    requestTransaction();
+  }, []);
 
   const requestTransaction = () => {
     axios.get(reportApiEndpoints.transaction, {})
       .then(response => {
         // console.log(response.data);
+        setFetching(false);
         if (response.data.transactions.length > 0) {
           setEvents(
             response.data.transactions.map(item => {
@@ -80,7 +79,6 @@ const TransactionCalendar = (props) => {
                 }
             })
           );
-          setFetching(false);
         } else {
 
         }

@@ -12,7 +12,7 @@ const globalState = {
   user: null
 };
 
-const useCustomState = () => {
+const useLocalState = () => {
   const [processedState, setProcessedState] = useState((loadState() || globalState));
   useEffect(() => {
     saveState(processedState);
@@ -20,4 +20,4 @@ const useCustomState = () => {
   return [processedState, setProcessedState];
 };
 
-export const { Provider, useTracked } = createContainer(useCustomState);
+export const { Provider, useTracked } = createContainer(useLocalState);
