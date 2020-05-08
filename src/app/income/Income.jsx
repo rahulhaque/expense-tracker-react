@@ -325,7 +325,6 @@ const Income = (props) => {
               <div className="p-fluid">
                 <Controller
                   name="category"
-                  defaultValue={datatable.incomeCategory}
                   onChange={([e]) => {
                     return e.value
                   }}

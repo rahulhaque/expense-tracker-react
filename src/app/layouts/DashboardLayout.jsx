@@ -9,7 +9,7 @@ import AppInlineProfile from './../dashboard/AppInlineProfile';
 import AppMenu from './../dashboard/AppMenu';
 import AppFooter from './../dashboard/AppFooter';
 
-// import Dashboard from './../dashboard/Dashboard';
+import Dashboard from './../dashboard/Dashboard';
 import ExpenseCategory from './../expense/ExpenseCategory';
 import Expense from './../expense/Expense';
 import EditExpense from './../expense/EditExpense';
@@ -115,6 +115,7 @@ const DashboardLayout = (props) => {
       </div>
       <div className="layout-main" style={{ minHeight: '95vh' }}>
         <Switch>
+          <PrivateRoute exact strict path={'/dashboard'} component={Dashboard} />
           <PrivateRoute exact strict path={'/expense'} component={Expense} />
           <PrivateRoute exact strict path={'/expense/:expense_id/edit'} component={EditExpense} />
           <PrivateRoute exact strict path={'/expense/category'} component={ExpenseCategory} />
@@ -128,8 +129,6 @@ const DashboardLayout = (props) => {
           <PrivateRoute exact strict path={'/profile'} component={Profile} />
           <PrivateRoute exact strict path={'/profile/edit'} component={EditProfile} />
           <Route render={props => <PageNotFound {...props} />} />
-          {/* <PrivateRoute exact strict path={'/dashboard'} component={Dashboard} />
-            */}
         </Switch>
       </div>
       <AppFooter />
