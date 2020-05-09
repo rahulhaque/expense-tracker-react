@@ -22,6 +22,7 @@ import IncomeCategory from './../income/IncomeCategory';
 import EditIncomeCategory from './../income/EditIncomeCategory';
 import TransactionCalendar from './../calendar/TransactionCalendar';
 import Setting from './../setting/Setting';
+import ScrollToTop from './../dashboard/ScrollToTop';
 import PageNotFound from './../errors/404';
 
 import { logout } from './../../Axios';
@@ -133,6 +134,7 @@ const DashboardLayout = (props) => {
         <div style={{ height: '55px' }}>
           {/* For footer adjustment */}
         </div>
+        <ScrollToTop />
       </div>
       <AppFooter />
       <div className="layout-mask" />
