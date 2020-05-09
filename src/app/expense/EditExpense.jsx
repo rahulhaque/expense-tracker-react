@@ -222,7 +222,7 @@ const EditExpense = (props) => {
               </div>
               <div className="p-fluid">
                 <label>Remarks</label>
-                <textarea ref={register} rows={5} autoResize={true} placeholder="" name="remarks" className="p-inputtext p-inputtextarea p-component p-inputtextarea-resizable" />
+                <textarea ref={register} rows={5} placeholder="" name="remarks" className="p-inputtext p-inputtextarea p-component p-inputtextarea-resizable" />
                 <p className="text-error">{errors.remarks?.message}</p>
               </div>
               <div className="p-fluid">

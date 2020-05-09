@@ -27,7 +27,7 @@ const Login = (props) => {
   const [state, setState] = useTracked();
   const [submitting, setSubmitting] = useState(false);
 
-  console.log('Login', state);
+  // console.log('Login', state);
 
   // Login form handle
   const { register, handleSubmit, errors } = useForm({
@@ -54,8 +54,7 @@ const Login = (props) => {
 
       })
       .catch(error => {
-        console.log('error');
-        console.log(error.response);
+        // console.log('error', error.response);
 
         if (error.response && error.response.status === 422) {
           messages.show({ severity: 'error', detail: 'Incorrect email or password.', sticky: true });

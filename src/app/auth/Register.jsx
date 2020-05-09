@@ -27,7 +27,7 @@ const Register = (props) => {
 
   const [submitting, setSubmitting] = useState(false);
 
-  console.log('Register', props);
+  // console.log('Register', props);
 
   // Login form handle
   const { register, handleSubmit, errors, setError, reset } = useForm({

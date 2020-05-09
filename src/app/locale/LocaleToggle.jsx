@@ -13,7 +13,7 @@ const LocaleToggle = (props) => {
   const toggleLanguage = useCallback(() => {
     i18n.language === 'en' ? i18n.changeLanguage('bn') : i18n.changeLanguage('en')
     setItem('language', i18n.language);
-  }, [i18n.language]);
+  }, [i18n]);
 
   return (
     <Button type="button" onClick={toggleLanguage}

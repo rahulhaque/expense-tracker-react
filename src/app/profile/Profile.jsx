@@ -148,15 +148,15 @@ const Profile = (props) => {
 
             <form onSubmit={handleSubmit(submitChangePassword)}>
               <div className="p-fluid">
-                <input type='password' name='old_password' ref={register} placeholder="Old Password" className="p-inputtext p-component p-filled" />
+                <input type='password' name='old_password' ref={register} autoComplete="off" placeholder="Old Password" className="p-inputtext p-component p-filled" />
                 <p className="text-error">{errors.old_password?.message}</p>
               </div>
               <div className="p-fluid">
-                <input type='password' name='new_password' ref={register} placeholder="New Password" className="p-inputtext p-component p-filled" />
+                <input type='password' name='new_password' ref={register} autoComplete="off" placeholder="New Password" className="p-inputtext p-component p-filled" />
                 <p className="text-error">{errors.new_password?.message}</p>
               </div>
               <div className="p-fluid">
-                <input type='password' name='confirm_password' ref={register} placeholder="Confirm Password" className="p-inputtext p-component p-filled" />
+                <input type='password' name='confirm_password' ref={register} autoComplete="off" placeholder="Confirm Password" className="p-inputtext p-component p-filled" />
                 <p className="text-error">{errors.confirm_password?.message}</p>
               </div>
               <div className="p-fluid">

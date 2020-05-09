@@ -358,7 +358,7 @@ const Income = (props) => {
                 <p className="text-error">{errors.amount?.message}</p>
               </div>
               <div className="p-fluid">
-                <textarea ref={register} rows={5} autoResize={true} placeholder="Income Notes" name="notes" className="p-inputtext p-inputtextarea p-component p-inputtextarea-resizable" />
+                <textarea ref={register} rows={5} placeholder="Income Notes" name="notes" className="p-inputtext p-inputtextarea p-component p-inputtextarea-resizable" />
                 <p className="text-error">{errors.notes?.message}</p>
               </div>
               <div className="p-fluid">

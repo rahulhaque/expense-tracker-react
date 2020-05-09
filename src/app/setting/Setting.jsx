@@ -10,7 +10,7 @@ import CurrencySidebar from './../common/CurrencySidebar';
 
 import { currencyApiEndpoints } from './../../API';
 import axios from './../../Axios';
-import { getItem, setItem } from './../../Helpers';
+import { setItem } from './../../Helpers';
 import { useTracked } from './../../Store';
 
 let messages; // For alert message
@@ -24,7 +24,7 @@ const Setting = (props) => {
   const toggleLanguage = useCallback(() => {
     i18n.language === 'en' ? i18n.changeLanguage('bn') : i18n.changeLanguage('en');
     setItem('language', i18n.language);
-  }, []);
+  }, [i18n]);
 
   const submitSetting = () => {
     axios.put(currencyApiEndpoints.currency + '/' + state.user.id, JSON.stringify({ currency_id: state.currentCurrency.id }))
