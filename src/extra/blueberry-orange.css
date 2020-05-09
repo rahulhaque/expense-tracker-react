@@ -1,3 +1,10 @@
+/*
+Custom template - BlueBerry Orange
+Copyright © rahulhaque
+
+Not free to use or copy without permission
+*/
+
 :root {
   --color-1: #6c5871;
   --color-2: #ff9702;
@@ -485,4 +492,34 @@ Lots taken from Flatly (MIT): https://bootswatch.com/4/flatly/bootstrap.css
 .fc-toolbar h2 {
   font-size: 1.2em;
   font-weight: bold;
+}
+
+/*
+Scroll to top
+*/
+.scrollTop {
+  position: fixed;
+  width: 100%;
+  bottom: 20px;
+  align-items: center;
+  height: 20px;
+  justify-content: center;
+  z-index: 1000;
+  cursor: pointer;
+  animation: fadeIn 0.3s;
+  transition: opacity 0.4s;
+  opacity: 0.5;
+}
+
+.scrollTop:hover{
+  opacity: 1;
+}
+
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 0.5;
+  }
 }

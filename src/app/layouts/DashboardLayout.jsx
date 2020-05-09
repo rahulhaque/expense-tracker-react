@@ -113,7 +113,7 @@ const DashboardLayout = (props) => {
           </div>
         </ScrollPanel>
       </div>
-      <div className="layout-main" style={{ minHeight: '95vh' }}>
+      <div className="layout-main" style={{ minHeight: '100vh', marginBottom: '-55px' }}>
         <Switch>
           <PrivateRoute exact strict path={'/dashboard'} component={Dashboard} />
           <PrivateRoute exact strict path={'/expense'} component={Expense} />
@@ -130,6 +130,9 @@ const DashboardLayout = (props) => {
           <PrivateRoute exact strict path={'/profile/edit'} component={EditProfile} />
           <Route render={props => <PageNotFound {...props} />} />
         </Switch>
+        <div style={{ height: '55px' }}>
+          {/* For footer adjustment */}
+        </div>
       </div>
       <AppFooter />
       <div className="layout-mask" />

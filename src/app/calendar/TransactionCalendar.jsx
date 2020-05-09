@@ -49,8 +49,6 @@ const TransactionCalendar = (props) => {
   const [fetching, setFetching] = useState(true);
   const [events, setEvents] = useState([]);
 
-  console.log(events);
-
   useEffect(() => {
     requestTransaction();
   }, []);

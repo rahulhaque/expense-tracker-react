@@ -31,19 +31,6 @@ const addExpenseValidationSchema = yup.object().shape({
 
 const Dashboard = (props) => {
 
-  // constructor() {
-  //   super();
-  //   this.state = {
-  //     expenseDate: new Date(),
-  //     recentExpense: [],
-  //     recentExpenseLoading: true,
-  //     recentIncome: [],
-  //     recentIncomeLoading: true,
-  //     monthlyExpenseSummary: {},
-  //     monthlyIncomeSummary: {}
-  //   };
-  // }
-
   const [state] = useTracked();
   const { register, handleSubmit, setValue, errors, setError, reset, control } = useForm({
     validationSchema: addExpenseValidationSchema
