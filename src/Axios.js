@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { authApiEndpoints, host } from "./API";
-import { getItem, setItem } from "./Helpers";
+import { getItem, setItem, removeItem } from "./Helpers";
 
 axios.defaults.baseURL = host;
 axios.defaults.headers['Content-Type'] = 'application/json';
@@ -89,10 +89,10 @@ export const logout = () => {
   axios.post(authApiEndpoints.logout)
     .then(response => {
       // Check if success
-      localStorage.removeItem('user');
-      localStorage.removeItem('token_created');
-      localStorage.removeItem('access_token');
-      localStorage.removeItem('expires_in');
+      removeItem('user');
+      removeItem('token_created');
+      removeItem('access_token');
+      removeItem('expires_in');
       window.location.replace('/#/login');
 
       return true;
@@ -101,10 +101,10 @@ export const logout = () => {
       // Check if token expired
       // Check any other error, like - invalid token
       // Or forcefully logout the user
-      localStorage.removeItem('user');
-      localStorage.removeItem('token_created');
-      localStorage.removeItem('access_token');
-      localStorage.removeItem('expires_in');
+      removeItem('user');
+      removeItem('token_created');
+      removeItem('access_token');
+      removeItem('expires_in');
       window.location.replace('/#/login');
       return true; // Return false if you need
     })
