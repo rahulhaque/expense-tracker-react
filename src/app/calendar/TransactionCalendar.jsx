@@ -34,13 +34,19 @@ const options = {
     right: 'today,prev,next' // prevYear,nextYear
   },
   editable: false,
-  dateClick: (info) => {
-    console.log('Clicked on: ' + info.dateStr);
-    console.log('Coordinates: ' + info.jsEvent.pageX + ',' + info.jsEvent.pageY);
-    console.log('Current view: ' + info.view.type);
-  },
+  // dateClick: (info) => {
+  //   console.log('Clicked on: ' + info.dateStr);
+  //   console.log('Coordinates: ' + info.jsEvent.pageX + ',' + info.jsEvent.pageY);
+  //   console.log('Current view: ' + info.view.type);
+  // },
   eventClick: (info) => {
     console.log(info.event);
+    console.log('Event: ' + info.event.id);
+    console.log('Coordinates: ' + info.jsEvent.pageX + ',' + info.jsEvent.pageY);
+    console.log('View: ' + info.view.type);
+
+    // change the border color just for fun
+    info.el.style.borderColor = 'red';
   },
 };
 
@@ -61,14 +67,14 @@ const TransactionCalendar = (props) => {
         if (response.data.transactions.length > 0) {
           setEvents(
             response.data.transactions.map(item => {
-              return item.transaction_type === 'Income' ? {
-                id: item.formatted_date,
-                title: `(+) ${item.total} ${item.currency_name}`,
-                date: item.formatted_date,
-                backgroundColor: '#4caf50',
-                borderColor: '#3c9c40',
-              } :
+              return item.transaction_type === 'Income' ?
                 {
+                  id: item.formatted_date,
+                  title: `(+) ${item.total} ${item.currency_name}`,
+                  date: item.formatted_date,
+                  backgroundColor: '#4caf50',
+                  borderColor: '#3c9c40',
+                } : {
                   id: item.formatted_date,
                   title: `(-) ${item.total} ${item.currency_name}`,
                   date: item.formatted_date,

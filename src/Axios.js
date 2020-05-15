@@ -45,7 +45,7 @@ axios.interceptors.response.use(undefined, err => {
       instance.patch(host + authApiEndpoints.refresh)
         .then(response => {
           is_refreshing = false;
-          onRrefreshed(response.data.access_token);
+          onRefreshed(response.data.access_token);
 
           // console.log('token refreshed');
           setItem('expires_in', response.data.expires_in);
@@ -80,7 +80,7 @@ function subscribeTokenRefresh(cb) {
   subscribers.push(cb);
 }
 
-function onRrefreshed(token) {
+function onRefreshed(token) {
   subscribers.map(cb => cb(token));
 }
 
