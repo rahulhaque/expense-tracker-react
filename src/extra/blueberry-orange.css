@@ -101,6 +101,36 @@ body .p-inputgroup .p-inputgroup-addon {
   color: var(--color-title);
 }
 
+body .p-dialog-title {
+  color: var(--color-title);
+}
+
+body .p-dialog {
+    -moz-border-radius: 5px;
+    -webkit-border-radius: 5px;
+    border-radius: 5px;
+}
+
+body .p-dialog .p-dialog-titlebar {
+    border: 0px solid #c8c8c8;
+    -moz-border-radius-topleft: 5px;
+    -webkit-border-top-left-radius: 5px;
+    border-top-left-radius: 5px;
+    -moz-border-radius-topright: 5px;
+    -webkit-border-top-right-radius: 5px;
+    border-top-right-radius: 5px;
+}
+
+body .p-dialog .p-dialog-content {
+    border: 0px solid #c8c8c8;
+    -moz-border-radius-bottomLeft: 5px;
+    -webkit-border-bottom-left-radius: 5px;
+    border-bottom-left-radius: 5px;
+    -moz-border-radius-bottomRight: 5px;
+    -webkit-border-bottom-right-radius: 5px;
+    border-bottom-right-radius: 5px;
+}
+
 .layout-wrapper .layout-topbar .layout-topbar-icons a:hover {
   color: var(--color-subtitle);
 }
@@ -300,6 +330,7 @@ hr {
   border-radius: 1.5em;
   border: 1px solid #6e15c1;
   box-shadow: 0 4px 20px 0 rgba(0,0,0,.14), 0 7px 10px -5px hsla(0,0%,60%,.4);
+  cursor: pointer;
 }
 
 .fc-event,
