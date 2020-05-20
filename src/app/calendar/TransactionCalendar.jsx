@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Helmet } from 'react-helmet';
 
 import { Messages } from 'primereact/messages';
@@ -20,10 +20,10 @@ let messages;
 
 const TransactionCalendar = (props) => {
 
-  const [fetching, setFetching] = useState(true);
-  const [events, setEvents] = useState([]);
+  const [events, setEvents] = useState({ events: [], eventsLoading: true });
   const [transactionsByDate, setTransactionByDate] = useState({ transactions: [], transactionsLoading: true });
   const [modalVisible, setModalVisible] = useState(false);
+  const eventInfo = useRef({ id: null, type: null });
 
   useEffect(() => {
     requestTransaction();
@@ -48,13 +48,15 @@ const TransactionCalendar = (props) => {
       right: 'today,prev,next' // prevYear,nextYear
     },
     editable: false,
-    // dateClick: (info) => {
-    //   console.log('Clicked on: ' + info.dateStr);
-    //   console.log('Coordinates: ' + info.jsEvent.pageX + ',' + info.jsEvent.pageY);
-    //   console.log('Current view: ' + info.view.type);
-    // },
+    dateClick: (info) => {
+      // console.log(info);
+      // info.dayEl.style.backgroundColor = '#fcf8e3';
+      // console.log('Clicked on: ' + info.dateStr);
+      // console.log('Coordinates: ' + info.jsEvent.pageX + ',' + info.jsEvent.pageY);
+      // console.log('Current view: ' + info.view.type);
+    },
     eventClick: (info) => {
-      requestTransactionDetail(`${info.event.id}%`, info.event.extendedProps.type);
+      eventInfo.current = { id: `${info.event.id}%`, type: info.event.extendedProps.type };
       setModalVisible(true);
     },
   };
@@ -116,7 +118,7 @@ const TransactionCalendar = (props) => {
     axios.get(reportApiEndpoints.transaction, {})
       .then(response => {
         // console.log(response.data);
-        setFetching(false);
+        setEvents({ ...events, eventsLoading: false });
         if (response.data.transactions.length > 0) {
           setEvents(
             response.data.transactions.map(item => {
@@ -164,11 +166,14 @@ const TransactionCalendar = (props) => {
         visible={modalVisible}
         style={{ width: '80%' }}
         modal={true}
+        onShow={() => {
+          requestTransactionDetail(eventInfo.current.id, eventInfo.current.type);
+        }}
         onHide={() => {
           setTransactionByDate({
             ...transactionsByDate,
             transactions: [],
-            transactionsLoading: false
+            transactionsLoading: true
           });
           setModalVisible(false);
         }}
@@ -187,7 +192,7 @@ const TransactionCalendar = (props) => {
                 <div className="p-card-subtitle">Detail of your daily incomes and expenses.</div>
               </div>
               <div className="p-col-6" align="right">
-                {fetching ? <ProgressSpinner style={{ height: '25px', width: '25px' }} strokeWidth={'4'} /> : ''}
+                {events.eventsLoading ? <ProgressSpinner style={{ height: '25px', width: '25px' }} strokeWidth={'4'} /> : ''}
               </div>
             </div>
             <br />
