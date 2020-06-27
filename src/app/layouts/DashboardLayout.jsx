@@ -89,7 +89,7 @@ const DashboardLayout = (props) => {
     }
   }
 
-  let logo = state.layoutColorMode === 'dark' ? '/assets/layout/images/dollar-logo.png' : '/assets/layout/images/dollar-logo.png';
+  let logo = state.layoutColorMode === 'dark' ? require('./../../assets/logo-sidebar.png') : require('./../../assets/logo-sidebar.png');
   let wrapperClass = classNames('layout-wrapper', {
     'layout-overlay': state.layoutMode === 'overlay',
     'layout-static': state.layoutMode === 'static',

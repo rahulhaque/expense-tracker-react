@@ -98,12 +98,12 @@ class Calculator extends Component {
   }
 
   componentDidMount() {
-    console.log('keydown listener added');
+    // console.log('keydown listener added');
     document.addEventListener('keydown', this.handleKeyDown);
   }
 
   componentWillUnmount() {
-    console.log('keydown listener removed');
+    // console.log('keydown listener removed');
     document.removeEventListener('keydown', this.handleKeyDown);
   }
 

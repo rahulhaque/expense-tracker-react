@@ -8,7 +8,7 @@ const AppInlineProfile = (props) => {
   return (
     <div className="profile">
       <div>
-        <img src="/assets/layout/images/logo.png" alt="logo" />
+        <img src={require('./../../assets/user.png')} alt="logo" />
       </div>
       <a href="#" className="profile-link" onClick={e => e.preventDefault()}>
         <span className="username">{state.user.name}</span>
