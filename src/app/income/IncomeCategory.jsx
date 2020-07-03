@@ -15,6 +15,24 @@ import { Column } from 'primereact/column';
 import { incomeApiEndpoints } from './../../API';
 import axios from './../../Axios';
 
+const StyledSwal = Swal.mixin({
+  customClass: {
+    container: 'container-class',
+    popup: 'popup-class',
+    header: 'header-class',
+    title: 'p-card-title',
+    content: 'content-class',
+    closeButton: 'close-button-class',
+    image: 'image-class',
+    input: 'input-class',
+    actions: 'actions-class',
+    confirmButton: 'p-button p-button-raised p-button-danger p-button-text-icon-left',
+    cancelButton: 'p-button p-button-raised p-button-info p-button-text-icon-left',
+    footer: 'footer-class'
+  },
+  buttonsStyling: false
+});
+
 let messages;
 
 const incomeCategoryValidationSchema = yup.object().shape({
@@ -68,21 +86,7 @@ const IncomeCategory = (props) => {
 
   const deleteIncomeCategory = (data) => {
     // console.log(data);
-    Swal.fire({
-      customClass: {
-        container: 'container-class',
-        popup: 'popup-class',
-        header: 'header-class',
-        title: 'p-card-title',
-        content: 'content-class',
-        closeButton: 'close-button-class',
-        image: 'image-class',
-        input: 'input-class',
-        actions: 'actions-class',
-        confirmButton: 'p-button p-button-raised p-button-danger p-button-text-icon-left',
-        cancelButton: 'p-button p-button-raised p-button-info p-button-text-icon-left',
-        footer: 'footer-class'
-      },
+    StyledSwal.fire({
       title: 'Are you sure?',
       text: `Confirm to delete income category ${data.category_name}.`,
       type: 'warning',

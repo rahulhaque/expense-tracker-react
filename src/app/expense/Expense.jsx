@@ -21,6 +21,25 @@ import axios from './../../Axios';
 import { expenseApiEndpoints } from './../../API';
 import { useTracked } from './../../Store';
 
+
+const StyledSwal = Swal.mixin({
+  customClass: {
+    container: 'container-class',
+    popup: 'popup-class',
+    header: 'header-class',
+    title: 'p-card-title',
+    content: 'content-class',
+    closeButton: 'close-button-class',
+    image: 'image-class',
+    input: 'input-class',
+    actions: 'actions-class',
+    confirmButton: 'p-button p-button-raised p-button-danger p-button-text-icon-left',
+    cancelButton: 'p-button p-button-raised p-button-info p-button-text-icon-left',
+    footer: 'footer-class'
+  },
+  buttonsStyling: false
+});
+
 let messages;
 
 const addExpenseValidationSchema = yup.object().shape({
@@ -111,21 +130,7 @@ const Expense = (props) => {
 
   const deleteExpense = (data) => {
     // console.log(data);
-    Swal.fire({
-      customClass: {
-        container: 'container-class',
-        popup: 'popup-class',
-        header: 'header-class',
-        title: 'p-card-title',
-        content: 'content-class',
-        closeButton: 'close-button-class',
-        image: 'image-class',
-        input: 'input-class',
-        actions: 'actions-class',
-        confirmButton: 'p-button p-button-raised p-button-danger p-button-text-icon-left',
-        cancelButton: 'p-button p-button-raised p-button-info p-button-text-icon-left',
-        footer: 'footer-class'
-      },
+    StyledSwal.fire({
       title: 'Are you sure?',
       text: `Confirm to delete expense on ${data.spent_on}.`,
       type: 'warning',

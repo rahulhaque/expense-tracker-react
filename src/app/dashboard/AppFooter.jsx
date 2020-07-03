@@ -7,7 +7,7 @@ const AppFooter = (props) => {
     <div className="layout-footer" style={{ display: 'flex', justifyContent: 'space-between', height: '55px' }}>
       <div>
         <span className="footer-text">{process.env.REACT_APP_APP_NAME}</span>
-        <img src="/assets/layout/images/dollar.png" alt="" height="25px" />
+        <img src={require('./../../logo.png')} alt="" height="25px" />
         <span className="footer-text">Copyright &copy; {dayjs().format('YYYY')}</span>
       </div>
       <span className="footer-text">ver.{packageJson.version}</span>

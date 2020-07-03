@@ -93,7 +93,7 @@ export const logout = () => {
       removeItem('token_created');
       removeItem('access_token');
       removeItem('expires_in');
-      window.location.replace('/#/login');
+      window.location.reload();
 
       return true;
     })
@@ -105,7 +105,7 @@ export const logout = () => {
       removeItem('token_created');
       removeItem('access_token');
       removeItem('expires_in');
-      window.location.replace('/#/login');
+      window.location.reload();
       return true; // Return false if you need
     })
 };
