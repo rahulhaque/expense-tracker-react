@@ -89,7 +89,7 @@ const IncomeCategory = (props) => {
     StyledSwal.fire({
       title: 'Are you sure?',
       text: `Confirm to delete income category ${data.category_name}.`,
-      type: 'warning',
+      icon: 'warning',
       showCancelButton: true,
       confirmButtonText: '<span class="pi pi-trash p-button-icon-left"></span><span class="p-button-text">Delete</span>',
       cancelButtonText: '<span class="pi pi-ban p-button-icon-left"></span><span class="p-button-text">No</span>',

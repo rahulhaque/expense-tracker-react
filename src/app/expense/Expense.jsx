@@ -133,7 +133,7 @@ const Expense = (props) => {
     StyledSwal.fire({
       title: 'Are you sure?',
       text: `Confirm to delete expense on ${data.spent_on}.`,
-      type: 'warning',
+      icon: 'warning',
       showCancelButton: true,
       confirmButtonText: '<span class="pi pi-trash p-button-icon-left"></span><span class="p-button-text">Delete</span>',
       cancelButtonText: '<span class="pi pi-ban p-button-icon-left"></span><span class="p-button-text">No</span>',
