@@ -1,6 +1,6 @@
 export const loadState = () => {
   try {
-    const serialisedState = localStorage.getItem('state');
+    const serialisedState = localStorage.getItem('expense-tracker-state');
     if (serialisedState === null) {
       return undefined;
     }
@@ -13,7 +13,7 @@ export const loadState = () => {
 export const saveState = (state) => {
   try {
     const serialisedState = JSON.stringify(state);
-    localStorage.setItem('state', serialisedState);
+    localStorage.setItem('expense-tracker-state', serialisedState);
   } catch (error) {
     // Ignore write errors.
   }
