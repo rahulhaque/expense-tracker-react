@@ -368,6 +368,7 @@ const Dashboard = (props) => {
                       filter={true}
                       filterPlaceholder="Search here"
                       showClear={true}
+                      filterInputAutoFocus={false}
                       options={expenseCategories}
                       style={{ width: '100%' }}
                       placeholder="Expense Category"

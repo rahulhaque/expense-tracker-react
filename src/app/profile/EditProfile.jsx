@@ -182,6 +182,7 @@ const EditProfile = (props) => {
                       filterBy="currency_code,currency_name"
                       filterPlaceholder="Search here"
                       showClear={true}
+                      filterInputAutoFocus={false}
                       options={state.currencies}
                       style={{ width: '100%' }}
                       itemTemplate={currencyTemplate}

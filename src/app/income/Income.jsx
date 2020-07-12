@@ -338,6 +338,7 @@ const Income = (props) => {
                       filter={true}
                       filterPlaceholder="Search here"
                       showClear={true}
+                      filterInputAutoFocus={false}
                       options={incomeCategories}
                       style={{ width: '100%' }}
                       placeholder="Income Category"
