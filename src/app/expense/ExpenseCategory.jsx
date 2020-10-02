@@ -58,7 +58,7 @@ const ExpenseCategory = (props) => {
 
   useEffect(() => {
     requestExpenseCategories();
-  }, [datatable.sortOrder, datatable.sortField]);
+  }, [datatable]);
 
   const requestExpenseCategories = async (rows = 5, page = 1) => {
     setExpenseCategories({

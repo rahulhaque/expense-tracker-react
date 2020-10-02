@@ -75,7 +75,7 @@ const Expense = (props) => {
 
   useEffect(() => {
     requestExpense();
-  }, [datatable.sortField, datatable.sortOrder, datatable.rowsPerPage]);
+  }, [datatable]);
 
   const requestExpenseCategory = async () => {
     await axios.get(expenseApiEndpoints.expenseCategory, {})

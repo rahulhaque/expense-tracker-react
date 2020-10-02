@@ -73,7 +73,7 @@ const Income = (props) => {
 
   useEffect(() => {
     requestIncome();
-  }, [datatable.sortField, datatable.sortOrder, datatable.rowsPerPage]);
+  }, [datatable]);
 
   const requestIncomeCategory = async () => {
     await axios.get(incomeApiEndpoints.incomeCategory, {})

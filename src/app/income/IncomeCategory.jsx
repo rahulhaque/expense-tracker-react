@@ -58,7 +58,7 @@ const IncomeCategory = (props) => {
 
   useEffect(() => {
     requestIncomeCategories();
-  }, [datatable.sortOrder, datatable.sortField]);
+  }, [datatable]);
 
   const requestIncomeCategories = async (rows = 5, page = 1) => {
     setIncomeCategories({
