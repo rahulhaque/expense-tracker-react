@@ -53,7 +53,7 @@ const Dashboard = (props) => {
 
 
   const requestExpenseCategory = async () => {
-    await axios.get(expenseApiEndpoints.expenseCategory, {})
+    await axios.get(expenseApiEndpoints.expenseCategory + '?sort_col=category_name&sort_order=asc', {})
       .then(response => {
         // console.log(response.data);
         if (response.data.data.length > 0) {

@@ -76,7 +76,7 @@ const Income = (props) => {
   }, [datatable]);
 
   const requestIncomeCategory = async () => {
-    await axios.get(incomeApiEndpoints.incomeCategory, {})
+    await axios.get(incomeApiEndpoints.incomeCategory + '?sort_col=category_name&sort_order=asc', {})
       .then(response => {
         // console.log(response.data);
         if (response.data.data.length > 0) {
