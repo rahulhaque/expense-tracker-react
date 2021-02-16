@@ -1,6 +1,6 @@
 {
   "name": "expense-tracker",
-  "version": "0.8.0",
+  "version": "1.0.0",
   "homepage": "./",
   "private": true,
   "dependencies": {
@@ -13,6 +13,7 @@
     "@testing-library/react": "^9.5.0",
     "@testing-library/user-event": "^7.2.1",
     "axios": "^0.21.1",
+    "chart.js": "^2.9.4",
     "classnames": "^2.2.6",
     "dayjs": "^1.8.29",
     "i18next": "^19.5.4",

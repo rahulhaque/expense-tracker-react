@@ -21,6 +21,7 @@ import EditExpenseCategory from './../expense/EditExpenseCategory';
 import IncomeCategory from './../income/IncomeCategory';
 import EditIncomeCategory from './../income/EditIncomeCategory';
 import TransactionCalendar from './../calendar/TransactionCalendar';
+import Analytics from './../analytics/Analytics';
 import Setting from './../setting/Setting';
 import ScrollToTop from './../dashboard/ScrollToTop';
 import PageNotFound from './../errors/404';
@@ -50,6 +51,7 @@ const menu = [
     ]
   },
   { label: 'Calendar', url: '/calendar', icon: 'pi pi-fw pi-calendar', command: () => { } },
+  { label: 'Analytics', url: '/analytics', icon: 'pi pi-fw pi-chart-bar', command: () => { } },
   { label: 'Settings', url: '/setting', icon: 'pi pi-fw pi-cog', command: () => { } },
   { label: 'Profile', url: '/profile', icon: 'pi pi-fw pi-user', command: () => { } },
   { label: 'Logout', url: '', icon: 'pi pi-fw pi-power-off', command: () => logout() },
@@ -126,6 +128,7 @@ const DashboardLayout = (props) => {
           <PrivateRoute exact strict path={'/income/category'} component={IncomeCategory} />
           <PrivateRoute exact strict path={'/income/category/:category_id/edit'} component={EditIncomeCategory} />
           <PrivateRoute exact strict path={'/calendar'} component={TransactionCalendar} />
+          <PrivateRoute exact strict path={'/analytics'} component={Analytics} />
           <PrivateRoute exact strict path={'/setting'} component={Setting} />
           <PrivateRoute exact strict path={'/profile'} component={Profile} />
           <PrivateRoute exact strict path={'/profile/edit'} component={EditProfile} />

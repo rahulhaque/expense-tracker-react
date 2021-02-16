@@ -118,30 +118,31 @@ const TransactionCalendar = (props) => {
     axios.get(reportApiEndpoints.transaction, {})
       .then(response => {
         // console.log(response.data);
-        setEvents({ ...events, eventsLoading: false });
         if (response.data.transactions.length > 0) {
-          setEvents(
-            response.data.transactions.map(item => {
+          setEvents({
+            ...events,
+            eventsLoading: false,
+            events: response.data.transactions.map(item => {
               return item.transaction_type === 'Income' ?
                 {
                   id: item.formatted_date,
                   title: `(+) ${item.total} ${item.currency_name}`,
                   date: item.formatted_date,
                   type: item.transaction_type,
-                  backgroundColor: '#4caf50',
-                  borderColor: '#3c9c40',
+                  backgroundColor: '#55dda9',
+                  borderColor: '#55dda9',
                 } : {
                   id: item.formatted_date,
                   title: `(-) ${item.total} ${item.currency_name}`,
                   date: item.formatted_date,
                   type: item.transaction_type,
-                  backgroundColor: '#f47036',
-                  borderColor: '#f45b36'
+                  backgroundColor: '#ffb102',
+                  borderColor: '#ffb102'
                 }
             })
-          );
+          });
         } else {
-
+          setEvents({ ...events, eventsLoading: false });
         }
       })
       .catch(error => {
@@ -197,7 +198,7 @@ const TransactionCalendar = (props) => {
             </div>
             <br />
             <div>
-              <FullCalendar events={events} options={options} />
+              <FullCalendar events={events.events} options={options} />
             </div>
           </Card>
         </div>

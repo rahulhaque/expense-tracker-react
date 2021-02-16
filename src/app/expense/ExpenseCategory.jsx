@@ -119,7 +119,7 @@ const ExpenseCategory = (props) => {
           .catch(error => {
             // console.log('error');
             // console.log(error.response);
-            if (error.response.status === 409) {
+            if (error.response.status === 404) {
               messages.clear();
               messages.show({
                 severity: 'error',

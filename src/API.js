@@ -38,3 +38,7 @@ export const reportApiEndpoints = {
   monthlyIncomeSummary: '/api/v1/report/income/months/summary',
   transaction: '/api/v1/report/transaction',
 };
+
+export const analyticsApiEndpoints = {
+  analyticsYear: '/api/v1/analytics/year',
+};

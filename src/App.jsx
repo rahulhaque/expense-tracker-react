@@ -6,7 +6,6 @@ import Routes from './Routes';
 
 import 'primereact/resources/primereact.min.css';
 import 'primeicons/primeicons.css';
-// import 'primereact/resources/themes/nova-light/theme.css';
 import './extra/nova-light.css';
 import 'primeflex/primeflex.css';
 import '@fullcalendar/core/main.css';
