@@ -60,12 +60,9 @@ const ExpenseCategory = (props) => {
     requestExpenseCategories();
   }, [datatable]);
 
-  const requestExpenseCategories = async (rows = 5, page = 1) => {
-    setExpenseCategories({
-      ...expenseCategories,
-      fetching: true
-    });
-    await axios.get(expenseApiEndpoints.expenseCategory + '?page=' + page + '&per_page=' + rows + '&sort_col=' + datatable.sortField + '&sort_order=' + (datatable.sortOrder === 1 ? 'asc' : 'desc'), {})
+  const requestExpenseCategories = async () => {
+    setExpenseCategories({ ...expenseCategories, fetching: true });
+    await axios.get(expenseApiEndpoints.expenseCategory + '?page=' + datatable.currentPage + '&per_page=' + datatable.rowsPerPage + '&sort_col=' + datatable.sortField + '&sort_order=' + (datatable.sortOrder === 1 ? 'asc' : 'desc'), {})
       .then(response => {
         // console.log(response.data);
         if (response.data.data) {
@@ -80,7 +77,7 @@ const ExpenseCategory = (props) => {
         }
       })
       .catch(error => {
-        console.log(error);
+        // console.log(error);
       });
   };
 
@@ -117,8 +114,7 @@ const ExpenseCategory = (props) => {
 
           })
           .catch(error => {
-            // console.log('error');
-            // console.log(error.response);
+            // console.log('error', error.response);
             if (error.response.status === 404) {
               messages.clear();
               messages.show({
@@ -150,7 +146,6 @@ const ExpenseCategory = (props) => {
     axios.post(expenseApiEndpoints.expenseCategory, JSON.stringify(data))
       .then(response => {
         // console.log('success', response.data);
-
         if (response.status === 201) {
 
           reset();
@@ -168,9 +163,7 @@ const ExpenseCategory = (props) => {
 
       })
       .catch(error => {
-        console.log('error');
-        console.log(error.response);
-
+        // console.log('error', error.response);
         if (error.response.status === 401) {
           messages.clear();
           messages.show({
@@ -239,7 +232,8 @@ const ExpenseCategory = (props) => {
               </div>
             </div>
             <br />
-            <DataTable value={expenseCategories.categories.data}
+            <DataTable
+              value={expenseCategories.categories.data}
               sortField={datatable.sortField}
               sortOrder={datatable.sortOrder}
               responsive={true}
@@ -250,12 +244,12 @@ const ExpenseCategory = (props) => {
               lazy={true}
               first={expenseCategories.categories.from - 1}
               onPage={(e) => {
-                console.log(e);
+                // console.log(e);
                 setDatatable({
                   ...datatable,
-                  rowsPerPage: e.rows
-                })
-                requestExpenseCategories(e.rows, (e.page + 1))
+                  currentPage: (e.page + 1),
+                  rowsPerPage: e.rows,
+                });
               }}
               onSort={e => {
                 // console.log(e);

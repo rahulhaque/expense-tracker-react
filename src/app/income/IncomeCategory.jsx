@@ -60,12 +60,9 @@ const IncomeCategory = (props) => {
     requestIncomeCategories();
   }, [datatable]);
 
-  const requestIncomeCategories = async (rows = 5, page = 1) => {
-    setIncomeCategories({
-      ...incomeCategories,
-      fetching: true
-    });
-    await axios.get(incomeApiEndpoints.incomeCategory + '?page=' + page + '&per_page=' + rows + '&sort_col=' + datatable.sortField + '&sort_order=' + (datatable.sortOrder === 1 ? 'asc' : 'desc'), {})
+  const requestIncomeCategories = async () => {
+    setIncomeCategories({...incomeCategories, fetching: true});
+    await axios.get(incomeApiEndpoints.incomeCategory + '?page=' + datatable.currentPage + '&per_page=' + datatable.rowsPerPage + '&sort_col=' + datatable.sortField + '&sort_order=' + (datatable.sortOrder > 0 ? 'asc' : 'desc'), {})
       .then(response => {
         // console.log(response.data);
         if (response.data.data) {
@@ -238,7 +235,8 @@ const IncomeCategory = (props) => {
               </div>
             </div>
             <br />
-            <DataTable value={incomeCategories.categories.data}
+            <DataTable
+              value={incomeCategories.categories.data}
               sortField={datatable.sortField}
               sortOrder={datatable.sortOrder}
               responsive={true}
@@ -249,12 +247,12 @@ const IncomeCategory = (props) => {
               lazy={true}
               first={incomeCategories.categories.from - 1}
               onPage={(e) => {
-                console.log(e);
+                // console.log(e);
                 setDatatable({
                   ...datatable,
-                  rowsPerPage: e.rows
+                  currentPage: (e.page + 1),
+                  rowsPerPage: e.rows,
                 })
-                requestIncomeCategories(e.rows, (e.page + 1))
               }}
               onSort={e => {
                 // console.log(e);

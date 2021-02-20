@@ -388,7 +388,8 @@ const Expense = (props) => {
               </div>
             </div>
             <br />
-            <DataTable value={expense.expenses.data}
+            <DataTable
+              value={expense.expenses.data}
               sortField={datatable.sortField}
               sortOrder={datatable.sortOrder}
               responsive={true}
@@ -405,10 +406,6 @@ const Expense = (props) => {
                   currentPage: (e.page + 1),
                   rowsPerPage: e.rows,
                 });
-                setExpense({
-                  ...expense,
-                  fetching: false
-                });
               }}
               onSort={e => {
                 // console.log(e);
@@ -416,10 +413,6 @@ const Expense = (props) => {
                   ...datatable,
                   sortField: e.sortField,
                   sortOrder: e.sortOrder,
-                });
-                setExpense({
-                  ...expense,
-                  fetching: false
                 });
               }}
               className="text-center"

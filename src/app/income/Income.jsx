@@ -386,7 +386,8 @@ const Income = (props) => {
               </div>
             </div>
             <br />
-            <DataTable value={income.incomes.data}
+            <DataTable
+              value={income.incomes.data}
               sortField={datatable.sortField}
               sortOrder={datatable.sortOrder}
               responsive={true}
@@ -403,10 +404,6 @@ const Income = (props) => {
                   currentPage: (e.page + 1),
                   rowsPerPage: e.rows,
                 });
-                setIncome({
-                  ...income,
-                  fetching: false
-                });
               }}
               onSort={e => {
                 // console.log(e);
@@ -414,10 +411,6 @@ const Income = (props) => {
                   ...datatable,
                   sortField: e.sortField,
                   sortOrder: e.sortOrder,
-                });
-                setIncome({
-                  ...income,
-                  fetching: false
                 });
               }}
               className="text-center"
