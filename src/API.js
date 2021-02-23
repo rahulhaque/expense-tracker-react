@@ -39,6 +39,8 @@ export const reportApiEndpoints = {
   transaction: '/api/v1/report/transaction',
 };
 
-export const analyticsApiEndpoints = {
-  analyticsYear: '/api/v1/analytics/year',
+export const chartApiEndpoints = {
+  incomeExpenseCategories: '/api/v1/chart/income-expense/category',
+  incomeExpenseMonthWise: '/api/v1/chart/income-expense/month-wise',
+  incomeExpenseCategoryWise: '/api/v1/chart/income-expense/category-wise',
 };

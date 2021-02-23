@@ -45,6 +45,7 @@ const CurrencySidebar = (props) => {
           <ListBox
             value={state.currentCurrency}
             filter={true}
+            filterBy="currency_code,country"
             options={state.currencies}
             dataKey="currency_code"
             optionLabel="currency_code"

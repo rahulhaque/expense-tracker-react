@@ -18,6 +18,8 @@ Basic features include -
 - Language Selection (needs locale files)
 - Tools Sidebar with Calculator
 - Current and Last Month Summary
+- Month Wise Income Expense Chart
+- Category Wise Income Expense Chart
 - Responsive UI
 
 ## Install Instruction
