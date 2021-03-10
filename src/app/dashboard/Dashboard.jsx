@@ -244,7 +244,7 @@ const Dashboard = (props) => {
     }
     else {
       return <div>
-        <div className="text-center">No expense data found.</div>
+        <div className="text-center">No transaction data found.</div>
         <hr />
       </div>
     }
