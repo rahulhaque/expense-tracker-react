@@ -64,3 +64,5 @@ Additionally I have added a custom template in the `extra` folder. The template 
 This project is solely made for learning purposes. The structure of the project and the code practices may prove useful to  new learners who are exploring new technologies.
 
 Spare a ⭐ to keep me motivated. 😃
+hello everyone
+
