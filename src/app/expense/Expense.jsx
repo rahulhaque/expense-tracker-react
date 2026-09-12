@@ -45,7 +45,7 @@ let messages;
 const addExpenseValidationSchema = yup.object().shape({
   expense_date: yup.string().required('Expense date field is required'),
   category: yup.object().required('Expense category field is required'),
-  amount: yup.string().required('Expense amount field is required'),
+  amount: yup.number().typeError('Expense amount must be a valid number').positive('Expense amount must be greater than zero').required('Expense amount field is required'),
   spent_on: yup.string().required('Spent on field is required').max(100, 'Spent on must be at most 100 characters'),
   remarks: yup.string().max(200, 'Remarks must be at most 200 characters'),
 });
@@ -369,8 +369,22 @@ const Expense = (props) => {
                 <p className="text-error">{errors.remarks?.message}</p>
               </div>
               <div className="p-fluid">
-                <Button disabled={submitting} type="submit" label="Add Expense" icon="pi pi-plus"
-                  className="p-button-raised" />
+                <div className="p-grid">
+                  <div className="p-col-8">
+                    <Button disabled={submitting} type="submit" label="Add Expense" icon="pi pi-plus"
+                      className="p-button-raised" />
+                  </div>
+                  <div className="p-col-4">
+                    <Button
+                      disabled={submitting}
+                      type="button"
+                      label="Reset"
+                      icon="pi pi-refresh"
+                      className="p-button-raised p-button-secondary"
+                      onClick={() => reset()}
+                    />
+                  </div>
+                </div>
               </div>
             </form>
           </Card>
