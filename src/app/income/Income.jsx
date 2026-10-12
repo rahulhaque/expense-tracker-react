@@ -45,7 +45,7 @@ const addIncomeValidationSchema = yup.object().shape({
   source: yup.string().required('Income source field is required').max(100, 'Income source must be at most 100 characters'),
   category: yup.object().required('Income category field is required'),
   notes: yup.string().max(200, 'Income notes must be at most 200 characters'),
-  amount: yup.string().required('Income amount field is required'),
+  amount: yup.number().typeError('Income amount must be a valid number').positive('Income amount must be greater than zero').required('Income amount field is required'),
 });
 
 const Income = (props) => {
@@ -367,8 +367,22 @@ const Income = (props) => {
                 <p className="text-error">{errors.notes?.message}</p>
               </div>
               <div className="p-fluid">
-                <Button disabled={submitting} type="submit" label="Add Income" icon="pi pi-plus"
-                  className="p-button-raised" />
+                <div className="p-grid">
+                  <div className="p-col-8">
+                    <Button disabled={submitting} type="submit" label="Add Income" icon="pi pi-plus"
+                      className="p-button-raised" />
+                  </div>
+                  <div className="p-col-4">
+                    <Button
+                      disabled={submitting}
+                      type="button"
+                      label="Reset"
+                      icon="pi pi-refresh"
+                      className="p-button-raised p-button-secondary"
+                      onClick={() => reset()}
+                    />
+                  </div>
+                </div>
               </div>
             </form>
           </Card>

@@ -22,7 +22,7 @@ const editIncomeValidationSchema = yup.object().shape({
   income_date: yup.string().required('Income date field is required'),
   category: yup.object().required('Income category field is required'),
   source: yup.string().required('Spent on field is required').max(100, 'Spent on must be at most 100 characters'),
-  amount: yup.number().required('Income amount field is required'),
+  amount: yup.number().typeError('Income amount must be a valid number').positive('Income amount must be greater than zero').required('Income amount field is required'),
   notes: yup.string().max(200, 'Remarks must be at most 200 characters'),
 });
 
